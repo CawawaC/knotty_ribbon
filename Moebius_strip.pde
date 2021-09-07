@@ -4,6 +4,7 @@ import peasy.*;
 
 PeasyCam cam;
 float beta = 0;
+float draw_speed = 100.0;
 
 ArrayList<PVector> knot_points;
 
@@ -19,7 +20,7 @@ void setup() {
 void draw() {
   translate(width/2, height/2);
   stroke(255);
-  strokeWeight(8);
+  strokeWeight(1);
   noFill();
 
   background(25);
@@ -35,22 +36,39 @@ void draw() {
     vertex(p.x, p.y, p.z);
   }
   endShape();
+
+  //draw_ribbon();
 }
 
 void draw_knot() {
-  float r = (0.8 + 1.6 * sin(6 * beta)) * 100;
-  float theta = 2 * beta;
-  float phi = 0.6 * PI * sin(12 * beta);
+  if (beta >= PI) {
+    return;
+  }
 
-  float x = r * cos(phi) * cos(theta);
-  float y = r * cos(phi) * sin(theta);
-  float z = r * sin(phi);
+  //PVector p = knot_4(beta);
+  //PVector p = knot_5(beta);
+  PVector p = knot_trefoil(beta*2);
 
-  beta += 0.001;
+  beta += 0.001 * draw_speed;
 
-  knot_points.add(new PVector(x, y, z));
+  knot_points.add(p);
 }
 
+void draw_ribbon() {
+  float angle = 0;
+  float r = 100;
+
+  beginShape(TRIANGLE_FAN);
+  while (angle < TAU) {
+    float x = r * cos(angle);
+    float y = r * sin(angle);
+    vertex(x, y, 0);
+    vertex(x, y, 10);
+
+    angle += 0.01;
+  }
+  endShape();
+}
 
 void keyPressed() {
   if (key == 'b' || key == 'B') {

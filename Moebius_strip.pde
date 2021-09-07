@@ -6,12 +6,16 @@ PeasyCam cam;
 float beta = 0;
 float draw_speed = 100.0;
 
-float ribbon_width = 10;
+float ribbon_width = 100;
+int twistiness = 50;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
+
+
+float angle_resolution = 200; // > 0
 
 ArrayList<PVector> knot_points;
 
 void setup() {
-  size(707, 1000, P3D);
+  size(2000, 2000, P3D);
 
   cam = new PeasyCam(this, width/2, height/2, 0, 1000);
   knot_points = new ArrayList<PVector>();
@@ -38,6 +42,22 @@ void draw() {
   //  vertex(p.x, p.y, p.z);
   //}
   //endShape();
+
+
+  //noStroke();
+  //fill(0, 51, 102);
+  
+  //lightSpecular(255, 255, 255);
+  //directionalLight(204, 204, 204, 0, 0, -1);
+  
+  //translate(80, 200, 0);
+  //specular(255, 255, 255);
+  //sphere(120);
+  
+  //translate(240, 0, 0);
+  //specular(204, 102, 0);
+  //sphere(120);
+
 
   draw_twisting_ribbon();
 }
@@ -75,14 +95,40 @@ void draw_ribbon() {
 
 void draw_twisting_ribbon() {
 
-  float x = 0;
+  if (angle_resolution <= 0) {
+    print("Keep angle_resolution above 0");
+    return;
+  }
+
+  float angle = 0;
+  float r = 1000;
+  float twist = 0;
+  float moebius_offset = 0;
+
+  if (twistiness % 2 == 1) {
+    moebius_offset = 1;
+  }  // See if we're moebius twisting (top and bottom of the ribbon end up switching)
+
   beginShape(TRIANGLE_STRIP);
+  while (angle < TAU) {
+    float x1 = r * cos(angle);
+    float y1 = r * sin(angle) + ribbon_width * sin(twist)/2;
+    float z1 = ribbon_width * cos(twist) 
+      + ribbon_width*angle/TAU * moebius_offset;
 
-  for (x = -100; x < 200; x += 20) {
-    float y = 0;
+    float x2 = r * cos(angle);
+    float y2 = r * sin(angle) - ribbon_width * sin(twist)/2;
+    float z2 = ribbon_width * sin(twist) 
+      + ribbon_width*angle/TAU * moebius_offset;
 
-    vertex(x, y, 0);
-    vertex(x, y, ribbon_width);
+    twist = angle * twistiness/2;  // Divided by 2 to allow for moebius twists
+
+    stroke(255, sin(angle)*255, 123);
+
+    vertex(x1, y1, z1);
+    vertex(x2, y2, z2);
+
+    angle += 1/angle_resolution;
   }
 
   endShape(CLOSE);

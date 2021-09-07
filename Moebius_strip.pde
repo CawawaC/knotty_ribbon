@@ -6,6 +6,8 @@ PeasyCam cam;
 float beta = 0;
 float draw_speed = 100.0;
 
+float ribbon_width = 10;
+
 ArrayList<PVector> knot_points;
 
 void setup() {
@@ -28,16 +30,16 @@ void draw() {
   ambientLight(255, 123, 85);
   ambient(51, 26, 0);
 
-  draw_knot();
+  //draw_knot();
 
-  beginShape();
-  for (PVector p : knot_points) {
-    stroke(255, p.mag(), 255);
-    vertex(p.x, p.y, p.z);
-  }
-  endShape();
+  //beginShape();
+  //for (PVector p : knot_points) {
+  //  stroke(255, p.mag(), 255);
+  //  vertex(p.x, p.y, p.z);
+  //}
+  //endShape();
 
-  //draw_ribbon();
+  draw_twisting_ribbon();
 }
 
 void draw_knot() {
@@ -58,16 +60,32 @@ void draw_ribbon() {
   float angle = 0;
   float r = 100;
 
-  beginShape(TRIANGLE_FAN);
+  beginShape(TRIANGLE_STRIP);
   while (angle < TAU) {
     float x = r * cos(angle);
     float y = r * sin(angle);
-    vertex(x, y, 0);
-    vertex(x, y, 10);
+
+    vertex(x + noise(frameCount/10), y, 0);
+    vertex(x, y, ribbon_width);
 
     angle += 0.01;
   }
-  endShape();
+  endShape(CLOSE);
+}
+
+void draw_twisting_ribbon() {
+
+  float x = 0;
+  beginShape(TRIANGLE_STRIP);
+
+  for (x = -100; x < 200; x += 20) {
+    float y = 0;
+
+    vertex(x, y, 0);
+    vertex(x, y, ribbon_width);
+  }
+
+  endShape(CLOSE);
 }
 
 void keyPressed() {

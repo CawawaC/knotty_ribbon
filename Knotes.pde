@@ -12,7 +12,7 @@ void draw_knot() {
   knot_points.add(p);
 }
 
-// a from 0 to TAU
+// u from 0 to TAU
 PVector knot_trefoil(float u) {
   float x = 41*cos(u) - 18*sin(u) - 83*cos(2*u) - 83*sin(2*u) - 11*cos(3*u) + 27*sin(3*u);
   float y = 36*cos(u) + 27*sin(u) - 113*cos(2*u) + 30*sin(2*u) + 11*cos(3*u) - 27*sin(3*u);
@@ -56,13 +56,13 @@ PVector knot_5(float b) {
 }
 
 PVector knot_chaos(float b) {
-  //float r = 2 * sin(0.5 * PI * b);
-  //float theta = 49 * cos(b * 0.9);
-  //float phi = 0.2 * PI * sin(6 + b);
-  
   float r = 2 * sin(0.5 * PI * b);
   float theta = 49 * cos(b * 0.9);
   float phi = 0.2 * PI * sin(6 + b);
+  
+  //float r = 2.0 * sin(1.4 * b + 0.1*b) + 1.0 * cos(2.5 * b + 1.9*b + 1.5*pow(b, 2)) + 0.1;
+  //float theta = 11.4 * cos(b * 1.2) + 5.0;
+  //float phi = 1.7 * sin(-2 + b) + -1.1;
 
   float x = r * cos(phi) * cos(theta);
   float y = r * cos(phi) * sin(theta);

@@ -1,4 +1,4 @@
-import peasy.*; //<>// //<>// //<>//
+import peasy.*; //<>// //<>// //<>// //<>// //<>//
 import processing.svg.PGraphicsSVG;
 import processing.pdf.*;
 
@@ -64,7 +64,11 @@ void draw() {
   //vertex(0, height);
   //endShape();
   
-  ambientLight(102, 102, 102);
+  color l = crazyInigo(a, b, c, d, sin(frameCount/1000.0));
+  ambientLight(
+    red(l), 
+    green(l), 
+    blue(l));
   lightSpecular(204, 204, 204);
   directionalLight(102, 102, 102, 0, 0, -1);
   specular(255, 255, 255);
@@ -74,6 +78,7 @@ void draw() {
   shininess(2);
 
   draw_chaosknotty_ribbon_progressive();
+  //instant_draw();  // good for tweaking in search of values
 }
 
 void draw_chaosknotty_ribbon_progressive() {
@@ -117,7 +122,7 @@ void draw_chaosknotty_ribbon_progressive() {
     ribbon_points.add(new PVector(x2, y2, z2));
   }
 
-
+  rotateX(PI/3);
   beginShape(TRIANGLE_STRIP);
   fill(ribbon_gradient[0]);
   for (int i = 0; i < ribbon_points.size(); i += 2) {
@@ -126,8 +131,8 @@ void draw_chaosknotty_ribbon_progressive() {
 
     //fill(lerpColor(ribbon_gradient[0], ribbon_gradient[1], i/N));
     fill(crazyInigo(a, b, c, d, i/N));
-    vertex(p1.x, p1.y + noise(frameCount/118.2, i/100.0)*23, p1.z);
-    vertex(p2.x, p2.y + noise(frameCount/100.0, i/108.6)*20, p2.z);
+    vertex(p1.x, p1.y + noise(frameCount/118.2, i/100.0, 0)*23, p1.z);
+    vertex(p2.x, p2.y + noise(frameCount/100.0, i/108.6, 1)*20, p2.z);
   }
 
   endShape(CLOSE);
@@ -139,6 +144,10 @@ color crazyInigo(PVector a, PVector b, PVector c, PVector d, float t) {
   float col_b = (a.z + b.z * cos(TAU * (c.z * t + d.z)))*255;
 
   return color(col_r, col_g, col_b);
+}
+
+float colorElement(float a, float b, float c, float d, float t) {
+  return (a + b * cos(TAU * (c * t + d)))*255;
 }
 
 void keyPressed() {

@@ -1,3 +1,17 @@
+void draw_knot() {
+  if (beta >= PI) {
+    return;
+  }
+
+  //PVector p = knot_4(beta);
+  //PVector p = knot_5(beta);
+  PVector p = knot_trefoil(beta*2);
+
+  beta += 0.001 * draw_speed;
+
+  knot_points.add(p);
+}
+
 // a from 0 to TAU
 PVector knot_trefoil(float u) {
   float x = 41*cos(u) - 18*sin(u) - 83*cos(2*u) - 83*sin(2*u) - 11*cos(3*u) + 27*sin(3*u);

@@ -12,7 +12,7 @@ float beta = 0;
 float draw_speed = 100.0;
 
 float ribbon_width = 20;
-int twistiness = 8;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
+int twistiness = 0;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
 float angle_resolution = 200; // > 0
 
 ArrayList<PVector> knot_points;
@@ -30,6 +30,7 @@ void setup() {
   size(1000, 1000, P3D);
 
   cam = new PeasyCam(this, width/2, height/2, 0, 1000);
+  cam.setMinimumDistance(5);
   knot_points = new ArrayList<PVector>();
   ribbon_points = new ArrayList<PVector>();
 
@@ -88,9 +89,9 @@ void draw_chaosknotty_ribbon_progressive() {
     //PVector knot_p = knot_trefoil(angle);
     //PVector knot_p = knot_cinquefoil(5*angle, 2);
     //PVector knot_p = knot_5(angle);
-    //PVector knot_p = knot_chaos(angle/2);
+    PVector knot_p = knot_chaos(angle);
     //PVector knot_p = knotty_boy(angle);
-    PVector knot_p = torus_knot(angle, 2, 3);
+    //PVector knot_p = torus_knot(angle, 2, 3);
     
 
     float x1 = knot_p.x;

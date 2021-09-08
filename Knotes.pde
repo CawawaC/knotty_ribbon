@@ -56,15 +56,19 @@ PVector knot_5(float b) {
 }
 
 PVector knot_chaos(float b) {
-  float r = 0.7 * sin(0.5 * PI * b);
-  float theta = 4 * b;
+  //float r = 2 * sin(0.5 * PI * b);
+  //float theta = 49 * cos(b * 0.9);
+  //float phi = 0.2 * PI * sin(6 + b);
+  
+  float r = 2 * sin(0.5 * PI * b);
+  float theta = 49 * cos(b * 0.9);
   float phi = 0.2 * PI * sin(6 + b);
 
   float x = r * cos(phi) * cos(theta);
   float y = r * cos(phi) * sin(theta);
   float z = r * sin(phi);
 
-  return new PVector(x, y, z).mult(30);
+  return new PVector(x, y, z).mult(300);
 }
 
 PVector knotty_boy(float t) {

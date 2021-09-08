@@ -18,12 +18,15 @@ float angle_resolution = 200; // > 0
 ArrayList<PVector> knot_points;
 ArrayList<PVector> ribbon_points;
 
-boolean record = false;
-
 PVector a = new PVector(random(1), random(1), random(1));
 PVector b = new PVector(random(1), random(1), random(1));
 PVector c = new PVector(int(random(1, 4))/2.0, int(random(1, 4))/2.0, int(random(1, 4))/2.0); // must be integer number of halves to ensure looping
 PVector d = new PVector(random(1), random(1), random(1));
+
+
+// Chaos knot randomizers
+float e, f, g;
+
 
 
 void setup() {
@@ -34,23 +37,33 @@ void setup() {
   knot_points = new ArrayList<PVector>();
   ribbon_points = new ArrayList<PVector>();
 
-  record = false;
-
   pg = create_background();
+
+  e = random(2);
+  f = random(2);
+  g = random(2);
 
   //noLoop();
 }
 
 void draw() {
-  if (record) {
-    beginRaw(SVG, "output.svg");
-  }
   translate(width/2, height/2);
   stroke(255);
   strokeWeight(1);
   noFill();
-
+  
   background(25);
+  
+  //beginShape();
+  //fill(255, 123, 85);
+  //vertex(0, 0);
+  //vertex(width, 0);
+  
+  //fill(65, 23, 246);
+  //vertex(width, height);
+  //vertex(0, height);
+  //endShape();
+  
   ambientLight(102, 102, 102);
   lightSpecular(204, 204, 204);
   directionalLight(102, 102, 102, 0, 0, -1);
@@ -61,11 +74,6 @@ void draw() {
   shininess(2);
 
   draw_chaosknotty_ribbon_progressive();
-
-  if (record) {
-    endRaw();
-    record = false;
-  }
 }
 
 void draw_chaosknotty_ribbon_progressive() {
@@ -90,9 +98,10 @@ void draw_chaosknotty_ribbon_progressive() {
     //PVector knot_p = knot_cinquefoil(5*angle, 2);
     //PVector knot_p = knot_5(angle);
     PVector knot_p = knot_chaos(angle);
+    //PVector knot_p = knot_chaos_randomized(angle);
     //PVector knot_p = knotty_boy(angle);
     //PVector knot_p = torus_knot(angle, 2, 3);
-    
+
 
     float x1 = knot_p.x;
     float y1 = knot_p.y + ribbon_width * sin(twist)/2;
@@ -117,8 +126,8 @@ void draw_chaosknotty_ribbon_progressive() {
 
     //fill(lerpColor(ribbon_gradient[0], ribbon_gradient[1], i/N));
     fill(crazyInigo(a, b, c, d, i/N));
-    vertex(p1.x, p1.y, p1.z);
-    vertex(p2.x, p2.y, p2.z);
+    vertex(p1.x, p1.y + noise(frameCount/118.2, i/100.0)*23, p1.z);
+    vertex(p2.x, p2.y + noise(frameCount/100.0, i/108.6)*20, p2.z);
   }
 
   endShape(CLOSE);
@@ -137,8 +146,6 @@ void keyPressed() {
     save("screenshots/"+hour()+minute()+second()+".png");
   } else if (key == 'a') {
     draw_knot();
-  } else if (key == 'r') {
-    record = true;
   } else if (key == 's') {
     saveHighRes(4);
   } else if (key == 'u') {

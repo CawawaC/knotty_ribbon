@@ -1,13 +1,3 @@
-class Polar {
-  float r, phi, theta;
-
-  Polar(float r, float p, float t) {
-    this.r = r;
-    this.phi = p;
-    this.theta = t;
-  }
-}
-
 // a from 0 to TAU
 PVector knot_trefoil(float u) {
   float x = 41*cos(u) - 18*sin(u) - 83*cos(2*u) - 83*sin(2*u) - 11*cos(3*u) + 27*sin(3*u);

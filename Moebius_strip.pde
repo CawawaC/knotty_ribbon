@@ -6,8 +6,8 @@ PeasyCam cam;
 float beta = 0;
 float draw_speed = 100.0;
 
-float ribbon_width = 100;
-int twistiness = 50;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
+float ribbon_width = 20;
+int twistiness = 5;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
 
 
 float angle_resolution = 200; // > 0
@@ -15,7 +15,7 @@ float angle_resolution = 200; // > 0
 ArrayList<PVector> knot_points;
 
 void setup() {
-  size(2000, 2000, P3D);
+  size(500, 500, P3D);
 
   cam = new PeasyCam(this, width/2, height/2, 0, 1000);
   knot_points = new ArrayList<PVector>();
@@ -94,14 +94,13 @@ void draw_ribbon() {
 }
 
 void draw_twisting_ribbon() {
-
   if (angle_resolution <= 0) {
     print("Keep angle_resolution above 0");
     return;
   }
 
   float angle = 0;
-  float r = 1000;
+  float r = 200;
   float twist = 0;
   float moebius_offset = 0;
 

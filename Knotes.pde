@@ -21,6 +21,15 @@ PVector knot_trefoil(float u) {
   return new PVector(x, y, z);
 }
 
+// where 0 < u < (4*k + 2) * PI;
+PVector knot_cinquefoil(float u, float k) {
+  float x = cos(u) * (2 - cos(2*u/(2*k + 1)));
+  float y = sin(u) * (2 - cos(2*u/(2*k + 1)));
+  float z = -sin(2*u/(2*k + 1));
+
+  return new PVector(x, y, z).mult(100);
+}
+
 // b from 0 to PI
 PVector knot_4(float b) {
   float r = (0.8 + 1.6 * sin(6 * b)) * 100;
@@ -29,7 +38,7 @@ PVector knot_4(float b) {
   float x = r * cos(phi) * cos(theta);
   float y = r * cos(phi) * sin(theta);
   float z = r * sin(phi);
-  
+
   return new PVector(x, y, z);
 }
 
@@ -42,6 +51,44 @@ PVector knot_5(float b) {
   float x = r * cos(phi) * cos(theta);
   float y = r * cos(phi) * sin(theta);
   float z = r * sin(phi);
-  
+
   return  new PVector(x, y, z);
+}
+
+PVector knot_chaos(float b) {
+  float r = 0.7 * sin(0.5 * PI * b);
+  float theta = 4 * b;
+  float phi = 0.2 * PI * sin(6 + b);
+
+  float x = r * cos(phi) * cos(theta);
+  float y = r * cos(phi) * sin(theta);
+  float z = r * sin(phi);
+
+  return new PVector(x, y, z).mult(30);
+}
+
+PVector knotty_boy(float t) {
+  float v1 = 2;
+  float v2 = 3;
+  float R0 = 100;
+  float R1 = 20;
+
+  float r = R0 + R1 * sin(TAU * v1 * t);
+  float x = r * sin(TAU * v2 * t);
+  float y = r * cos(TAU * v2 * t);
+  float z = r * cos(TAU * v1 * t);
+
+  return new PVector(x, y, z);
+}
+
+// p and q must be coprime: no common divisor except 1.
+// And 2 <= p < q
+// [2, 3], [2, 5], [3, 5]...
+PVector torus_knot(float t, int p, int q) {
+  float R = 300;   // the radius of the torus (dunno which radius that is)
+  float x = cos(p*t) + R * cos(p*t) * cos(q*t);
+  float y = sin(p*t) + R * sin(p*t) * cos(q*t);
+  float z = R * sin(q*t);
+
+  return new PVector(x, y, z);
 }

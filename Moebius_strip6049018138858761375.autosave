@@ -1,6 +1,5 @@
-import peasy.*; //<>// //<>// //<>//
+import peasy.*;
 import processing.svg.PGraphicsSVG;
-import processing.pdf.*;
 
 // β: Alt + +03b2
 
@@ -22,21 +21,19 @@ boolean record = false;
 
 PVector a = new PVector(random(1), random(1), random(1));
 PVector b = new PVector(random(1), random(1), random(1));
-PVector c = new PVector(int(random(1, 4))/2.0, int(random(1, 4))/2.0, int(random(1, 4))/2.0); // must be integer number of halves to ensure looping
+PVector c = new PVector(int(random(4))/2, int(random(4))/2, int(random(4))/2); // must be integer number of halves to ensure looping
 PVector d = new PVector(random(1), random(1), random(1));
 
 
 void setup() {
   size(1000, 1000, P3D);
+  pg = createGraphics(width, height, P3D);
 
   cam = new PeasyCam(this, width/2, height/2, 0, 1000);
   knot_points = new ArrayList<PVector>();
   ribbon_points = new ArrayList<PVector>();
 
   record = false;
-
-  pg = create_background();
-
   //noLoop();
 }
 
@@ -44,22 +41,38 @@ void draw() {
   if (record) {
     beginRaw(SVG, "output.svg");
   }
-  translate(width/2, height/2);
-  stroke(255);
-  strokeWeight(1);
-  noFill();
+  
+  pg.beginDraw();
+  pg.translate(width/2, height/2);
+  pg.stroke(255);
+  pg.strokeWeight(1);
+  pg.noFill();
 
-  background(25);
-  ambientLight(102, 102, 102);
-  lightSpecular(204, 204, 204);
-  directionalLight(102, 102, 102, 0, 0, -1);
-  specular(255, 255, 255);
+  pg.background(25);
 
-  fill(palette[0]);
-  noStroke();
-  shininess(2);
+  //draw_knot();
 
-  draw_chaosknotty_ribbon_progressive();
+  //beginShape();
+  //for (PVector p : knot_points) {
+  //  stroke(255, p.mag(), 255);
+  //  vertex(p.x, p.y, p.z);
+  //}
+  //endShape();
+
+  pg.ambientLight(102, 102, 102);
+  pg.lightSpecular(204, 204, 204);
+  pg.directionalLight(102, 102, 102, 0, 0, -1);
+  pg.specular(255, 255, 255);
+
+  //fill(palette[0]);
+  pg.noStroke();
+  pg.shininess(2);
+  
+  
+  
+  draw_knotty_ribbon_progressive(pg);
+  pg.endDraw();
+  image(pg, 0, 0);
 
   if (record) {
     endRaw();
@@ -67,7 +80,7 @@ void draw() {
   }
 }
 
-void draw_chaosknotty_ribbon_progressive() {
+void draw_knotty_ribbon_progressive(PGraphics pg) {
   if (angle_resolution <= 0) {
     print("Keep angle_resolution above 0");
     return;
@@ -78,20 +91,14 @@ void draw_chaosknotty_ribbon_progressive() {
   float angle = frameCount/angle_resolution;
 
   if (angle < TAU) {
-    float twist = angle * twistiness/2;  // Divided by 2 to allow for moebius twists
+    float   twist = angle * twistiness/2;  // Divided by 2 to allow for moebius twists
     float moebius_offset = 0;
     if (twistiness % 2 == 1) {
       moebius_offset = 1;
     }  // See if we're moebius twisting (top and bottom of the ribbon end up switching)
 
 
-    //PVector knot_p = knot_trefoil(angle);
-    //PVector knot_p = knot_cinquefoil(5*angle, 2);
-    //PVector knot_p = knot_5(angle);
-    //PVector knot_p = knot_chaos(angle/2);
-    //PVector knot_p = knotty_boy(angle);
-    PVector knot_p = torus_knot(angle, 2, 3);
-    
+    PVector knot_p = knot_trefoil(angle);
 
     float x1 = knot_p.x;
     float y1 = knot_p.y + ribbon_width * sin(twist)/2;
@@ -108,16 +115,16 @@ void draw_chaosknotty_ribbon_progressive() {
   }
 
 
-  beginShape(TRIANGLE_STRIP);
-  fill(ribbon_gradient[0]);
+  pg.beginShape(TRIANGLE_STRIP);
+  //pg.fill(ribbon_gradient[0]);
   for (int i = 0; i < ribbon_points.size(); i += 2) {
     PVector p1 = ribbon_points.get(i);
     PVector p2 = ribbon_points.get(i+1);
 
     //fill(lerpColor(ribbon_gradient[0], ribbon_gradient[1], i/N));
-    fill(crazyInigo(a, b, c, d, i/N));
-    vertex(p1.x, p1.y, p1.z);
-    vertex(p2.x, p2.y, p2.z);
+    pg.fill(crazyInigo(a, b, c, d, i/N));
+    pg.vertex(p1.x, p1.y, p1.z);
+    pg.vertex(p2.x, p2.y, p2.z);
   }
 
   endShape(CLOSE);
@@ -140,8 +147,6 @@ void keyPressed() {
     record = true;
   } else if (key == 's') {
     saveHighRes(4);
-  } else if (key == 'u') {
-    bufferSave();
   }
 }
 
@@ -177,21 +182,4 @@ void saveHighRes(int scaleFactor) {
   endRecord();
 
   println("Finished");
-}
-
-PGraphics bufferSave() {
-  PGraphics pg = createGraphics(width*2, height*2, P3D);
-
-  pg.beginDraw();
-  pg.lights();
-  pg.background(0);
-  pg.noStroke();
-  pg.translate(pg.width/2, pg.height/2);
-  pg.rotateX(frameCount/100.0);
-  pg.rotateY(frameCount/200.0);
-  pg.box(400);
-  pg.save("test.png");
-  pg.endDraw();
-
-  return pg;
 }

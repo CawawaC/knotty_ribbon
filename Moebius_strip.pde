@@ -1,8 +1,4 @@
-import peasy.*; //<>// //<>// //<>// //<>// //<>//
-import processing.svg.PGraphicsSVG;
-import processing.pdf.*;
-
-// β: Alt + +03b2
+import peasy.*; //<>//
 
 color[] palette = {#3fb8af, #7fc7af, #dad8a7, #ff9e9d, #ff3d7f};
 color[] ribbon_gradient = { palette[0], palette[4] };
@@ -11,12 +7,14 @@ PeasyCam cam;
 float beta = 0;
 float draw_speed = 100.0;
 
-float ribbon_width = 20;
+float ribbon_width = 60;
 int twistiness = 0;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
+float flutter = 0.01;
 float angle_resolution = 200; // > 0
 
 ArrayList<PVector> knot_points;
 ArrayList<PVector> ribbon_points;
+boolean closed;
 
 PVector a = new PVector(random(1), random(1), random(1));
 PVector b = new PVector(random(1), random(1), random(1));
@@ -38,6 +36,7 @@ void setup() {
   ribbon_points = new ArrayList<PVector>();
 
   pg = create_background();
+  closed = false;
 
   e = random(2);
   f = random(2);
@@ -102,10 +101,14 @@ void draw_chaosknotty_ribbon_progressive() {
     //PVector knot_p = knot_trefoil(angle);
     //PVector knot_p = knot_cinquefoil(5*angle, 2);
     //PVector knot_p = knot_5(angle);
-    PVector knot_p = knot_chaos(angle);
+    //PVector knot_p = knot_chaos(angle);
     //PVector knot_p = knot_chaos_randomized(angle);
-    //PVector knot_p = knotty_boy(angle);
-    //PVector knot_p = torus_knot(angle, 2, 3);
+    //PVector knot_p = knotty_boy(angle, 2, 3);
+    PVector knot_p = torus_knot(angle, 10,19);
+    //PVector knot_p = knot_lissajous(angle);
+    //PVector knot_p = knot_figure_eight(angle);
+    //PVector knot_p = fibonacci_knot(angle, 2, 3); // f1 and f2 are consecutive values in the fibonacci series
+                                                  // Series: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, ...
 
 
     float x1 = knot_p.x;
@@ -120,6 +123,10 @@ void draw_chaosknotty_ribbon_progressive() {
 
     ribbon_points.add(new PVector(x1, y1, z1));
     ribbon_points.add(new PVector(x2, y2, z2));
+  } else if (!closed) {
+    ribbon_points.add(ribbon_points.get(0));
+    ribbon_points.add(ribbon_points.get(1));
+    closed = true;
   }
 
   rotateX(PI/3);
@@ -131,8 +138,8 @@ void draw_chaosknotty_ribbon_progressive() {
 
     //fill(lerpColor(ribbon_gradient[0], ribbon_gradient[1], i/N));
     fill(crazyInigo(a, b, c, d, i/N));
-    vertex(p1.x, p1.y + noise(frameCount/118.2, i/100.0, 0)*23, p1.z);
-    vertex(p2.x, p2.y + noise(frameCount/100.0, i/108.6, 1)*20, p2.z);
+    vertex(p1.x, p1.y + noise(frameCount/118.2, i/100.0, 0)*23*flutter, p1.z);
+    vertex(p2.x, p2.y + noise(frameCount/100.0, i/108.6, 1)*20*flutter, p2.z);
   }
 
   endShape(CLOSE);

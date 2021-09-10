@@ -37,7 +37,6 @@ void instant_draw() {
     float z2 = knot_p.z + ribbon_width * sin(twist) 
       + ribbon_width*angle/TAU * moebius_offset;
 
-    fill(ribbon_gradient[0]);
     PVector p1 = new PVector(x1, y1, z1);
     PVector p2 = new PVector(x2, y2, z2);
 

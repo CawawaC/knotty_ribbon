@@ -1,30 +1,51 @@
 import peasy.*; //<>//
 
-color[] palette = {#3fb8af, #7fc7af, #dad8a7, #ff9e9d, #ff3d7f};
-color[] ribbon_gradient = { palette[0], palette[4] };
-PGraphics pg;
-PeasyCam cam;
-float beta = 0;
-float draw_speed = 100.0;
+/*
 
-float ribbon_width = 60;
+ Author: Sacha Holsnyder
+ A sketch exploring  generative colorful ribbons twisted into knots and figures.
+ - Many different knotty algorithms are provided (see line 81)
+ - 2 draw modes: progressive and instant (see line 68)
+ 
+ Press 'b' for screenshot.
+ 
+ Made for Creative Code Berlin: Weekly Challenge 2021 week 36 (2021-09-06 to 2021-09-12)
+ 
+ Inspiration: Moebius strip by MC Escher: tinyurl.com/atjzhc68
+ Maths source: http://paulbourke.net/geometry/knots/
+ Coding train tutorial on knots: https://www.youtube.com/embed/r6YMKr1X0VA
+ Seriously knotty maths source: Ideal Knots by Andrzej Stasiak, Vsevolod Katritch, Louis H. Kauffman
+ 
+ */
+
+
+// Fun variables
+float ribbon_width = 40; // thicc ribbn
 int twistiness = 0;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
-float flutter = 0.01;
-float angle_resolution = 200; // > 0
+float flutter = 0.5; // perlin showed up to the party again
+KnotType knot_type = KnotType.CINQUEFOIL;
 
-ArrayList<PVector> knot_points;
+// Boring variables
+PeasyCam cam;
+float angle_resolution = 400; // > 0 pls. Affects draw speed.
 ArrayList<PVector> ribbon_points;
-boolean closed;
+boolean closed = false;
 
+// arguments for a generative color gradient/palette
+// algorithm by https://iquilezles.org/www/articles/palettes/palettes.htm
 PVector a = new PVector(random(1), random(1), random(1));
 PVector b = new PVector(random(1), random(1), random(1));
 PVector c = new PVector(int(random(1, 4))/2.0, int(random(1, 4))/2.0, int(random(1, 4))/2.0); // must be integer number of halves to ensure looping
 PVector d = new PVector(random(1), random(1), random(1));
 
-
 // Chaos knot randomizers
 float e, f, g;
 
+enum KnotType {
+  TREFOIL, CINQUEFOIL, KNOTTY, TORUS, FIGURE_EIGHT, 
+    FIBONACCI, GENERIC, LISSAJOUS, GENERIC_RANDOM, 
+    KNOT_5
+}
 
 
 void setup() {
@@ -32,11 +53,14 @@ void setup() {
 
   cam = new PeasyCam(this, width/2, height/2, 0, 1000);
   cam.setMinimumDistance(5);
-  knot_points = new ArrayList<PVector>();
   ribbon_points = new ArrayList<PVector>();
-
-  pg = create_background();
   closed = false;
+
+  println("Colors:");
+  println("a:", a);
+  println("b:", b);
+  println("c:", c);
+  println("d:", d);
 
   e = random(2);
   f = random(2);
@@ -47,82 +71,48 @@ void setup() {
 
 void draw() {
   translate(width/2, height/2);
-  stroke(255);
-  strokeWeight(1);
+  noStroke();
   noFill();
-  
+
   background(25);
-  
-  //beginShape();
-  //fill(255, 123, 85);
-  //vertex(0, 0);
-  //vertex(width, 0);
-  
-  //fill(65, 23, 246);
-  //vertex(width, height);
-  //vertex(0, height);
-  //endShape();
-  
-  color l = crazyInigo(a, b, c, d, sin(frameCount/1000.0));
-  ambientLight(
-    red(l), 
-    green(l), 
-    blue(l));
+
+  // Ambient light color slowly changes across time, for crazy color action
+  //color l = getColor(a, b, c, d, sin(frameCount/1000.0));
+  //ambientLight(red(l), green(l), blue(l));
+  // Or not
+  ambientLight(200, 200, 200);
+
   lightSpecular(204, 204, 204);
   directionalLight(102, 102, 102, 0, 0, -1);
   specular(255, 255, 255);
-
-  fill(palette[0]);
-  noStroke();
   shininess(2);
 
-  draw_chaosknotty_ribbon_progressive();
+  draw_ribbon();
   //instant_draw();  // good for tweaking in search of values
 }
 
-void draw_chaosknotty_ribbon_progressive() {
+void draw_ribbon() {
   if (angle_resolution <= 0) {
     print("Keep angle_resolution above 0");
     return;
   }
 
   float N = TAU * angle_resolution;
-  float r = 200;
   float angle = frameCount/angle_resolution;
 
   if (angle < TAU) {
     float twist = angle * twistiness/2;  // Divided by 2 to allow for moebius twists
-    float moebius_offset = 0;
-    if (twistiness % 2 == 1) {
-      moebius_offset = 1;
-    }  // See if we're moebius twisting (top and bottom of the ribbon end up switching)
+    float moebius_offset = check_for_moebius(twistiness);
+
+    PVector knot_p = get_knot_p(knot_type, angle);
 
 
-    //PVector knot_p = knot_trefoil(angle);
-    //PVector knot_p = knot_cinquefoil(5*angle, 2);
-    //PVector knot_p = knot_5(angle);
-    //PVector knot_p = knot_chaos(angle);
-    //PVector knot_p = knot_chaos_randomized(angle);
-    //PVector knot_p = knotty_boy(angle, 2, 3);
-    PVector knot_p = torus_knot(angle, 10,19);
-    //PVector knot_p = knot_lissajous(angle);
-    //PVector knot_p = knot_figure_eight(angle);
-    //PVector knot_p = fibonacci_knot(angle, 2, 3); // f1 and f2 are consecutive values in the fibonacci series
-                                                  // Series: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, ...
+    if (knot_p == null) {
+      print("Unhandled knot type: " + knot_type);
+    }
 
-
-    float x1 = knot_p.x;
-    float y1 = knot_p.y + ribbon_width * sin(twist)/2;
-    float z1 = knot_p.z + ribbon_width * cos(twist) 
-      + ribbon_width*angle/TAU * moebius_offset;
-
-    float x2 = knot_p.x;
-    float y2 = knot_p.y - ribbon_width * sin(twist)/2;
-    float z2 = knot_p.z + ribbon_width * sin(twist) 
-      + ribbon_width*angle/TAU * moebius_offset;
-
-    ribbon_points.add(new PVector(x1, y1, z1));
-    ribbon_points.add(new PVector(x2, y2, z2));
+    // Generate next pair of vertices
+    create_ribbon_vertices(knot_p, twist, angle, moebius_offset);
   } else if (!closed) {
     ribbon_points.add(ribbon_points.get(0));
     ribbon_points.add(ribbon_points.get(1));
@@ -131,18 +121,95 @@ void draw_chaosknotty_ribbon_progressive() {
 
   rotateX(PI/3);
   beginShape(TRIANGLE_STRIP);
-  fill(ribbon_gradient[0]);
   for (int i = 0; i < ribbon_points.size(); i += 2) {
     PVector p1 = ribbon_points.get(i);
     PVector p2 = ribbon_points.get(i+1);
 
-    //fill(lerpColor(ribbon_gradient[0], ribbon_gradient[1], i/N));
     fill(crazyInigo(a, b, c, d, i/N));
     vertex(p1.x, p1.y + noise(frameCount/118.2, i/100.0, 0)*23*flutter, p1.z);
     vertex(p2.x, p2.y + noise(frameCount/100.0, i/108.6, 1)*20*flutter, p2.z);
   }
 
   endShape(CLOSE);
+}
+
+
+//// Many possible knot algorithms
+//// Some come with conditions on the arguments.
+//// Check Knots.pde for details and tweaking
+PVector get_knot_p(KnotType kt, float angle) {
+  PVector knot_p = null;
+  switch(kt) {
+  case TREFOIL:
+    knot_p = knot_trefoil(angle);
+    // Trefoil. Yee basic knot.
+    break;
+
+  case CINQUEFOIL:
+    knot_p = knot_cinquefoil(7*angle, 3);
+    // (t, k) where t ranges from 0 to (2*k+1)*TAU, k int
+    // Examples: (5*angle, 2), (7*angle, 3)
+    break;
+
+  case KNOTTY:
+    knot_p = knotty_boy(angle/6, 9, 4);  // not sure about the rules here
+    // Dunno what it is. Looks like lissajous curves?
+    break;
+
+  case TORUS:
+    knot_p = torus_knot(angle, 10, 19, 2, 0.4); 
+    // (t, p, q, R, r). For a proper knot: 2 <= p < q. p and q coprime. Defines winding amount. 
+    // For art which is not a knot: do whatever
+    // R is torus radius. r is radius of the tube.
+    break;
+
+  case FIGURE_EIGHT:
+    knot_p = knot_figure_eight(angle);
+    // Figure eight. looks gud.
+    break;
+
+  case FIBONACCI:
+    knot_p = fibonacci_knot(angle, 2, 3);
+    // Fibonacci knot. 
+    // (t, f1, f2), f1 and f2 consecutive values in the fibonacci sequence.
+    // Series: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, ...
+    break;
+
+  case GENERIC:
+    knot_p = knot_generic(angle);
+    // Somewhat generic formula to be tweaked and abundantly DECONSTRUCTED
+    break;
+
+  case GENERIC_RANDOM:
+    knot_p = knot_randomized(angle);
+    break;
+
+  case LISSAJOUS:
+    knot_p = knot_lissajous(angle);
+    break;
+
+  case KNOT_5:
+    knot_p = knot_5(angle);
+    break;
+  } 
+
+  return knot_p;
+}
+
+// Generate 2 Vertices, on each side of the width of ribbon
+void create_ribbon_vertices(PVector knot_p, float twist, float angle, float mo) {
+  float x1 = knot_p.x;
+  float y1 = knot_p.y + ribbon_width * sin(twist)/2;
+  float z1 = knot_p.z + ribbon_width * cos(twist) 
+    + ribbon_width*angle/TAU * mo;
+
+  float x2 = knot_p.x;
+  float y2 = knot_p.y - ribbon_width * sin(twist)/2;
+  float z2 = knot_p.z + ribbon_width * sin(twist) 
+    + ribbon_width*angle/TAU * mo;
+
+  ribbon_points.add(new PVector(x1, y1, z1));
+  ribbon_points.add(new PVector(x2, y2, z2));
 }
 
 color crazyInigo(PVector a, PVector b, PVector c, PVector d, float t) {
@@ -153,69 +220,17 @@ color crazyInigo(PVector a, PVector b, PVector c, PVector d, float t) {
   return color(col_r, col_g, col_b);
 }
 
-float colorElement(float a, float b, float c, float d, float t) {
-  return (a + b * cos(TAU * (c * t + d)))*255;
-}
-
 void keyPressed() {
   if (key == 'b' || key == 'B') {
     save("screenshots/"+hour()+minute()+second()+".png");
-  } else if (key == 'a') {
-    draw_knot();
-  } else if (key == 's') {
-    saveHighRes(4);
-  } else if (key == 'u') {
-    bufferSave();
   }
 }
 
-PGraphics create_background() {
-  PGraphics bg = createGraphics(width, height, P3D); // make your buffered image size equal to sketch size
-
-  bg.beginDraw();
-  // do your gradient stuff here
-  bg.background(102);  // you can do background statements in the background
-  for (int i = 0; i < width; i++) {
-    bg.stroke(i/width * 125, 126, 13);
-    bg.line(i, 0, i, height);
+int check_for_moebius(float t) {
+  // See if we're moebius twisting (top and bottom of the ribbon end up switching at the end of 1 loop)
+  if (twistiness % 2 == 1) {
+    return 1;
+  } else {
+    return 0;
   }
-
-  // after your gradient, close out the pg image and finalize it with pg.endDraw
-  bg.endDraw();
-
-  return bg;
-}
-
-void saveHighRes(int scaleFactor) {
-  PGraphics hires = createGraphics(
-    width * scaleFactor, 
-    height * scaleFactor, 
-    P3D);
-  println("Generating high-resolution image...");
-
-  beginRecord(hires);
-  hires.scale(scaleFactor);
-  draw();
-  hires.save("screenshots/"+hour()+minute()+second()+".png");
-
-  endRecord();
-
-  println("Finished");
-}
-
-PGraphics bufferSave() {
-  PGraphics pg = createGraphics(width*2, height*2, P3D);
-
-  pg.beginDraw();
-  pg.lights();
-  pg.background(0);
-  pg.noStroke();
-  pg.translate(pg.width/2, pg.height/2);
-  pg.rotateX(frameCount/100.0);
-  pg.rotateY(frameCount/200.0);
-  pg.box(400);
-  pg.save("test.png");
-  pg.endDraw();
-
-  return pg;
 }

@@ -1,40 +1,34 @@
-void draw_knot() {
-  if (beta >= PI) {
-    return;
-  }
+// Formulas for harmonic knots: knots defined by (x, y, z)
+// noob definition: a mathematical knot is a closed piece of string twisted on itself.
+// Sources :   http://paulbourke.net/geometry/knots/
+//             Ideal Knots by Andrzej Stasiak, Vsevolod Katritch, Louis H. Kauffman
 
-  //PVector p = knot_4(beta);
-  //PVector p = knot_5(beta);
-  PVector p = knot_trefoil(beta*2);
 
-  beta += 0.001 * draw_speed;
-
-  knot_points.add(p);
-}
 
 // u from 0 to TAU
-PVector knot_trefoil(float u) {
-  float x = 41*cos(u) - 18*sin(u) - 83*cos(2*u) - 83*sin(2*u) - 11*cos(3*u) + 27*sin(3*u);
-  float y = 36*cos(u) + 27*sin(u) - 113*cos(2*u) + 30*sin(2*u) + 11*cos(3*u) - 27*sin(3*u);
-  float z = 45*sin(u) - 30*cos(2*u) + 113*sin(2*u) - 11*cos(3*u) + 27*sin(3*u);
+PVector knot_trefoil(float t) {
+  float x = 41*cos(t) - 18*sin(t) - 83*cos(2*t) - 83*sin(2*t) - 11*cos(3*t) + 27*sin(3*t);
+  float y = 36*cos(t) + 27*sin(t) - 113*cos(2*t) + 30*sin(2*t) + 11*cos(3*t) - 27*sin(3*t);
+  float z = 45*sin(t) - 30*cos(2*t) + 113*sin(2*t) - 11*cos(3*t) + 27*sin(3*t);
 
   return new PVector(x, y, z);
 }
 
 // where 0 < u < (4*k + 2) * PI;
-PVector knot_cinquefoil(float u, float k) {
-  float x = cos(u) * (2 - cos(2*u/(2*k + 1)));
-  float y = sin(u) * (2 - cos(2*u/(2*k + 1)));
-  float z = -sin(2*u/(2*k + 1));
+PVector knot_cinquefoil(float t, float k) {
+  float x = cos(t) * (2 - cos(2*t/(2*k + 1)));
+  float y = sin(t) * (2 - cos(2*t/(2*k + 1)));
+  float z = -sin(2*t/(2*k + 1));
 
   return new PVector(x, y, z).mult(100);
 }
 
 // b from 0 to PI
-PVector knot_4(float b) {
-  float r = (0.8 + 1.6 * sin(6 * b)) * 100;
-  float theta = 2 * b;
-  float phi = 0.6 * PI * sin(12 * b);
+PVector knot_4(float t) {
+  float r = (0.8 + 1.6 * sin(6 * t)) * 100;
+  float theta = 2 * t;
+  float phi = 0.6 * PI * sin(12 * t);
+  
   float x = r * cos(phi) * cos(theta);
   float y = r * cos(phi) * sin(theta);
   float z = r * sin(phi);
@@ -43,11 +37,11 @@ PVector knot_4(float b) {
 }
 
 
-PVector knot_5(float b) {
-  float r = 1.2 * 0.6 * sin(0.5 * PI + 6 * b);
+PVector knot_5(float t) {
+  float r = 1.2 * 0.6 * sin(0.5 * PI + 6 * t);
   r *= 300;
-  float theta = 4 * b;
-  float phi = 0.2 * PI * sin(6 * b);
+  float theta = 4 * t;
+  float phi = 0.2 * PI * sin(6 * t);
   float x = r * cos(phi) * cos(theta);
   float y = r * cos(phi) * sin(theta);
   float z = r * sin(phi);
@@ -55,10 +49,10 @@ PVector knot_5(float b) {
   return  new PVector(x, y, z);
 }
 
-PVector knot_chaos(float b) {
-  float r = 2 * sin(0.5 * PI * b);
-  float theta = 49 * cos(b * 0.9);
-  float phi = 0.2 * PI * sin(6 + b);
+PVector knot_chaos(float t) {
+  float r = 2 * sin(0.5 * PI * t);
+  float theta = 49 * cos(t * 0.9);
+  float phi = 0.2 * PI * sin(6 + t);
 
   //float r = 2.0 * sin(1.4 * b + 0.1*b) + 1.0 * cos(2.5 * b + 1.9*b + 1.5*pow(b, 2)) + 0.1;
   //float theta = 11.4 * cos(b * 1.2) + 5.0;
@@ -71,10 +65,15 @@ PVector knot_chaos(float b) {
   return new PVector(x, y, z).mult(300);
 }
 
-PVector knot_chaos_randomized(float b) {
-  float r = e * sin(f * PI * b);
-  float theta = f * cos(b * g);
-  float phi = g * PI * sin(e + b);
+PVector knot_randomized(float t) {
+  println("Randomized knot values:");
+  println("e: ", e);
+  println("f: ", f);
+  println("g: ", g);
+  
+  float r = e * sin(f * PI * t);
+  float theta = f * cos(t * g);
+  float phi = g * PI * sin(e + t);
 
   float x = r * cos(phi) * cos(theta);
   float y = r * cos(phi) * sin(theta);
@@ -98,10 +97,8 @@ PVector knotty_boy(float t, float v1, float v2) {
 // p and q must be coprime: no common divisor except 1.
 // And 2 <= p < q
 // [2, 3], [2, 5], [3, 5]...
-PVector torus_knot(float t, int p, int q) {
-  float R = 300;   // the radius of the torus (dunno which radius that is)
-  float tube_radius = 0.4;
-  float torus_radius = 2;
+PVector torus_knot(float t, int p, int q, float torus_radius, float tube_radius) {
+  float R = 200;   // scale
   
   float x = cos(p*t) * (torus_radius + tube_radius * cos(q*t));
   float y = sin(p*t) * (torus_radius + tube_radius * cos(q*t));
@@ -110,12 +107,12 @@ PVector torus_knot(float t, int p, int q) {
   return new PVector(x, y, z).mult(R);
 }
 
-PVector knot_generic(float b) {
+PVector knot_generic(float t) {
   // r, theta and phi are values for spherical coordinates
   // and functions of the angle b
-  float r = 2.6 * sin(1.6 * b) * 100;
-  float theta = cos(b*0.9) * 2.2;
-  float phi = 19 * cos(b) + sin(b*2);
+  float r = 2.6 * sin(1.6 * t) * 100;
+  float theta = cos(t*0.9) * 2.2;
+  float phi = 19 * cos(t) + sin(t*2);
 
   // There has to be a condition for the path to close
   // (otherwise it's not a knot in the mathematical sense)
@@ -183,3 +180,6 @@ PVector fibonacci_knot(float t, float f1, float f2) {
 //float r = 2.6 * sin(1.6 * b) * 100;
 //float theta = cos(b*5.9) * 2.2;
 //float phi = 19 * cos(b);
+
+// ZARD0Z!
+//PVector knot_p = torus_knot(angle, 6, 4, 2, -2.0);

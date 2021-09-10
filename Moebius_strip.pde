@@ -24,14 +24,15 @@ import controlP5.*;
 float ribbon_width = 40; // thicc ribbn
 int twistiness = 0;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
 float flutter = 0.5; // perlin showed up to the party again
-KnotType knot_type = KnotType.CINQUEFOIL;
-DRAWING_TYPE DRAWING = DRAWING_TYPE.INSTANT;
+KnotType knot_type = KnotType.values()[int(random(KnotType.values().length))];
+DRAWING_TYPE DRAWING = DRAWING_TYPE.PROGRESSIVE;  
 
 // Boring variables
 PeasyCam cam;
 float angle_resolution = 400; // > 0 pls. Affects draw speed.
 ArrayList<PVector> ribbon_points;
 boolean closed = false;
+float N = TAU * angle_resolution;  // Careful, number of vertices is 2*N.
 
 // arguments for a generative color gradient/palette
 // algorithm by https://iquilezles.org/www/articles/palettes/palettes.htm
@@ -42,8 +43,6 @@ PVector d = new PVector(random(1), random(1), random(1));
 
 // Chaos knot randomizers
 float e, f, g;
-
-
 
 enum KnotType {
   TREFOIL, CINQUEFOIL, KNOTTY, TORUS, FIGURE_EIGHT, 
@@ -75,15 +74,13 @@ void setup() {
 }
 
 void draw() {
-  background(25);
+  //background(25);
   background_2d();
-
 
   hint(ENABLE_DEPTH_TEST);
   translate(width/2, height/2);
   noStroke();
   noFill();
-
 
   // Ambient light color slowly changes across time, for crazy color action
   //color l = getColor(a, b, c, d, sin(frameCount/1000.0));
@@ -113,7 +110,7 @@ void draw_ribbon() {
     return;
   }
 
-  float N = TAU * angle_resolution;
+  
   float angle = frameCount/angle_resolution;
 
   if (angle < TAU) {
@@ -142,13 +139,16 @@ void draw_ribbon() {
     PVector p2 = ribbon_points.get(i+1);
 
     fill(getColor(a, b, c, d, i/N));
-    vertex(p1.x, p1.y + noise(frameCount/118.2, i/100.0, 0)*23*flutter, p1.z);
-    vertex(p2.x, p2.y + noise(frameCount/100.0, i/108.6, 1)*20*flutter, p2.z);
+    paintVertex(p1, p2, i/N);
   }
 
   endShape(CLOSE);
 }
 
+void paintVertex(PVector p1, PVector p2, float t) {
+  vertex(p1.x, p1.y + noise(frameCount/118.2, t, 0)*23*flutter, p1.z);
+  vertex(p2.x, p2.y + noise(frameCount/100.0, t*0.01, 1)*20*flutter, p2.z);
+}
 
 //// Many possible knot algorithms
 //// Some come with conditions on the arguments.
@@ -162,7 +162,7 @@ PVector get_knot_p(KnotType kt, float angle) {
     break;
 
   case CINQUEFOIL:
-    knot_p = knot_cinquefoil(7*angle, 3);
+    knot_p = knot_cinquefoil(5*angle, 2);
     // (t, k) where t ranges from 0 to (2*k+1)*TAU, k int
     // Examples: (5*angle, 2), (7*angle, 3)
     break;
@@ -258,14 +258,20 @@ void background_2d() {
   ortho();
   pushMatrix();
   translate(-width/2, -height/2);
+
   beginShape();
-  fill(getColor(a, b, c, d, 0.0));
+
+  //fill(getColor(a, b, c, d, 0.0));
+  fill(25);
   vertex(0, 0);
   vertex(width, 0);
-  fill(getColor(a, b, c, d, 0.5));
+
+  //fill(getColor(a, b, c, d, 0.5));
+  fill(75);
   vertex(width, height);
   vertex(0, height);
   endShape();
+
   popMatrix();
   cam.endHUD();
 }

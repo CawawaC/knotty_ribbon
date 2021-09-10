@@ -1,4 +1,5 @@
 import peasy.*; //<>//
+import controlP5.*;
 
 /*
 
@@ -24,6 +25,7 @@ float ribbon_width = 40; // thicc ribbn
 int twistiness = 0;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
 float flutter = 0.5; // perlin showed up to the party again
 KnotType knot_type = KnotType.CINQUEFOIL;
+DRAWING_TYPE DRAWING = DRAWING_TYPE.INSTANT;
 
 // Boring variables
 PeasyCam cam;
@@ -41,12 +43,17 @@ PVector d = new PVector(random(1), random(1), random(1));
 // Chaos knot randomizers
 float e, f, g;
 
+
+
 enum KnotType {
   TREFOIL, CINQUEFOIL, KNOTTY, TORUS, FIGURE_EIGHT, 
     FIBONACCI, GENERIC, LISSAJOUS, GENERIC_RANDOM, 
     KNOT_5
 }
 
+enum DRAWING_TYPE { 
+  PROGRESSIVE, INSTANT
+}
 
 void setup() {
   size(1000, 1000, P3D);
@@ -65,16 +72,18 @@ void setup() {
   e = random(2);
   f = random(2);
   g = random(2);
-
-  //noLoop();
 }
 
 void draw() {
+  background(25);
+  background_2d();
+
+
+  hint(ENABLE_DEPTH_TEST);
   translate(width/2, height/2);
   noStroke();
   noFill();
 
-  background(25);
 
   // Ambient light color slowly changes across time, for crazy color action
   //color l = getColor(a, b, c, d, sin(frameCount/1000.0));
@@ -87,8 +96,15 @@ void draw() {
   specular(255, 255, 255);
   shininess(2);
 
-  draw_ribbon();
-  //instant_draw();  // good for tweaking in search of values
+  switch (DRAWING) {
+  case PROGRESSIVE:
+    draw_ribbon();
+    break;
+
+  case INSTANT:
+    instant_draw();  // good for tweaking in search of values
+    break;
+  }
 }
 
 void draw_ribbon() {
@@ -125,7 +141,7 @@ void draw_ribbon() {
     PVector p1 = ribbon_points.get(i);
     PVector p2 = ribbon_points.get(i+1);
 
-    fill(crazyInigo(a, b, c, d, i/N));
+    fill(getColor(a, b, c, d, i/N));
     vertex(p1.x, p1.y + noise(frameCount/118.2, i/100.0, 0)*23*flutter, p1.z);
     vertex(p2.x, p2.y + noise(frameCount/100.0, i/108.6, 1)*20*flutter, p2.z);
   }
@@ -212,7 +228,7 @@ void create_ribbon_vertices(PVector knot_p, float twist, float angle, float mo) 
   ribbon_points.add(new PVector(x2, y2, z2));
 }
 
-color crazyInigo(PVector a, PVector b, PVector c, PVector d, float t) {
+color getColor(PVector a, PVector b, PVector c, PVector d, float t) {
   float col_r = (a.x + b.x * cos(TAU * (c.x * t + d.x)))*255;
   float col_g = (a.y + b.y * cos(TAU * (c.y * t + d.y)))*255;
   float col_b = (a.z + b.z * cos(TAU * (c.z * t + d.z)))*255;
@@ -233,4 +249,23 @@ int check_for_moebius(float t) {
   } else {
     return 0;
   }
+}
+
+void background_2d() {
+  cam.beginHUD();
+  hint(DISABLE_DEPTH_TEST);
+  noLights();
+  ortho();
+  pushMatrix();
+  translate(-width/2, -height/2);
+  beginShape();
+  fill(getColor(a, b, c, d, 0.0));
+  vertex(0, 0);
+  vertex(width, 0);
+  fill(getColor(a, b, c, d, 0.5));
+  vertex(width, height);
+  vertex(0, height);
+  endShape();
+  popMatrix();
+  cam.endHUD();
 }

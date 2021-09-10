@@ -122,7 +122,7 @@ void draw_knotty_ribbon_progressive() {
     PVector p2 = ribbon_points.get(i+1);
 
     //fill(lerpColor(ribbon_gradient[0], ribbon_gradient[1], i/N));
-    fill(crazyInigo(a, b, c, d, i/N));
+    fill(getColor(a, b, c, d, i/N));
     vertex(p1.x, p1.y, p1.z);
     vertex(p2.x, p2.y, p2.z);
   }

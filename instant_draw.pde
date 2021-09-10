@@ -41,7 +41,7 @@ void instant_draw() {
     PVector p2 = new PVector(x2, y2, z2);
 
     //fill(lerpColor(ribbon_gradient[0], ribbon_gradient[1], i/N));
-    fill(crazyInigo(a, b, c, d, angle/TAU));
+    fill(getColor(a, b, c, d, angle/TAU));
     vertex(p1.x, p1.y + noise(frameCount/118.2, angle/TAU)*50*angle/TAU, p1.z);
     vertex(p2.x, p2.y + noise(frameCount/100.0, angle/TAU)*50*angle/TAU, p2.z);
 

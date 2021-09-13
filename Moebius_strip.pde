@@ -1,4 +1,4 @@
-import peasy.*; //<>//
+import peasy.*; //<>// //<>// //<>// //<>//
 import controlP5.*;
 
 /*
@@ -24,8 +24,9 @@ import controlP5.*;
 float ribbon_width = 40; // thicc ribbn
 int twistiness = 0;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
 float flutter = 0.5; // perlin showed up to the party again
-KnotType knot_type = KnotType.values()[int(random(KnotType.values().length))];
-DRAWING_TYPE DRAWING = DRAWING_TYPE.PROGRESSIVE;  
+//KnotType knot_type = KnotType.values()[int(random(KnotType.values().length))];
+KnotType knot_type = KnotType.GENERIC;
+DRAWING_TYPE DRAWING = DRAWING_TYPE.INSTANT;  
 
 // Boring variables
 PeasyCam cam;
@@ -47,7 +48,7 @@ float e, f, g;
 enum KnotType {
   TREFOIL, CINQUEFOIL, KNOTTY, TORUS, FIGURE_EIGHT, 
     FIBONACCI, GENERIC, LISSAJOUS, GENERIC_RANDOM, 
-    KNOT_5
+    KNOT_5, TOUPIE
 }
 
 enum DRAWING_TYPE { 
@@ -55,10 +56,11 @@ enum DRAWING_TYPE {
 }
 
 void setup() {
-  size(1000, 1000, P3D);
+  size(800, 80, P3D);
 
   cam = new PeasyCam(this, width/2, height/2, 0, 1000);
   cam.setMinimumDistance(5);
+  cam.setMaximumDistance(500);
   ribbon_points = new ArrayList<PVector>();
   closed = false;
 
@@ -71,6 +73,8 @@ void setup() {
   e = random(2);
   f = random(2);
   g = random(2);
+  
+  println(knot_type);
 }
 
 void draw() {
@@ -110,7 +114,7 @@ void draw_ribbon() {
     return;
   }
 
-  
+
   float angle = frameCount/angle_resolution;
 
   if (angle < TAU) {
@@ -155,6 +159,7 @@ void paintVertex(PVector p1, PVector p2, float t) {
 //// Check Knots.pde for details and tweaking
 PVector get_knot_p(KnotType kt, float angle) {
   PVector knot_p = null;
+
   switch(kt) {
   case TREFOIL:
     knot_p = knot_trefoil(angle);
@@ -185,7 +190,7 @@ PVector get_knot_p(KnotType kt, float angle) {
     break;
 
   case FIBONACCI:
-    knot_p = fibonacci_knot(angle, 2, 3);
+    knot_p = fibonacci_knot(angle, 8, 13);
     // Fibonacci knot. 
     // (t, f1, f2), f1 and f2 consecutive values in the fibonacci sequence.
     // Series: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, ...
@@ -206,6 +211,10 @@ PVector get_knot_p(KnotType kt, float angle) {
 
   case KNOT_5:
     knot_p = knot_5(angle);
+    break;
+
+  case TOUPIE:
+    knot_p = knot_toupie(angle);
     break;
   } 
 

@@ -7,8 +7,8 @@
 
 // u from 0 to TAU
 PVector knot_trefoil(float t) {
-  float x = 41*cos(t) - 18*sin(t) - 83*cos(2*t) - 83*sin(2*t) - 11*cos(3*t) + 27*sin(3*t);
-  float y = 36*cos(t) + 27*sin(t) - 113*cos(2*t) + 30*sin(2*t) + 11*cos(3*t) - 27*sin(3*t);
+  float x = 41*cos(t) - 18*sin(t) - 78*cos(2*t) - 83*sin(2*t) - 11*cos(3*t) + 27*sin(103*t);
+  float y = -48*cos(t) + 95*sin(t) - 22*cos(2*t) + 30*sin(2*t) + 11*cos(3*t) - 77*sin(-25*t);
   float z = 45*sin(t) - 30*cos(2*t) + 113*sin(2*t) - 11*cos(3*t) + 27*sin(3*t);
 
   return new PVector(x, y, z);
@@ -28,7 +28,7 @@ PVector knot_4(float t) {
   float r = (0.8 + 1.6 * sin(6 * t)) * 100;
   float theta = 2 * t;
   float phi = 0.6 * PI * sin(12 * t);
-  
+
   float x = r * cos(phi) * cos(theta);
   float y = r * cos(phi) * sin(theta);
   float z = r * sin(phi);
@@ -66,11 +66,10 @@ PVector knot_chaos(float t) {
 }
 
 PVector knot_randomized(float t) {
-  println("Randomized knot values:");
   println("e: ", e);
   println("f: ", f);
   println("g: ", g);
-  
+
   float r = e * sin(f * PI * t);
   float theta = f * cos(t * g);
   float phi = g * PI * sin(e + t);
@@ -99,7 +98,7 @@ PVector knotty_boy(float t, float v1, float v2) {
 // [2, 3], [2, 5], [3, 5]...
 PVector torus_knot(float t, int p, int q, float torus_radius, float tube_radius) {
   float R = 200;   // scale
-  
+
   float x = cos(p*t) * (torus_radius + tube_radius * cos(q*t));
   float y = sin(p*t) * (torus_radius + tube_radius * cos(q*t));
   float z = tube_radius * sin(q*t);
@@ -110,7 +109,7 @@ PVector torus_knot(float t, int p, int q, float torus_radius, float tube_radius)
 PVector knot_generic(float t) {
   // r, theta and phi are values for spherical coordinates
   // and functions of the angle b
-  float r = 2.6 * sin(1.6 * t) * 100;
+  float r = 2.6 * sin(1.6 * t) * 178;
   float theta = cos(t*0.9) * 2.2;
   float phi = 19 * cos(t) + sin(t*2);
 
@@ -159,17 +158,24 @@ PVector fibonacci_knot(float t, float f1, float f2) {
   float y = cos(f2*t + .5);
   float z = 0.5 * cos(f3*t + 0.5) + 0.5*sin(f2*t + 0.5);
 
+  return new PVector(x, z, z).mult(200);
+}
+
+PVector knot_toupie(float t) {
+  float r = 2.6 * sin(1.6 * t);
+  float theta = cos(t*5.9) * 21.2;
+  float phi = 1.9 * sin(t);
+
+  float x = r * cos(phi) * cos(theta);
+  float y = r * cos(phi) * sin(theta);
+  float z = r * sin(phi);
+
   return new PVector(x, y, z).mult(200);
 }
 
 /// 
 /// Some nice-looking coordinates I found
 ///
-
-// Space station
-//float r = 2.6 * sin(1.6 * b) * 100;
-//float theta = cos(b*5.9) * 21.2;
-//float phi = 1.9 * sin(b);
 
 // Cool spiral
 //float r = 2 * sin(0.5 * PI * b);

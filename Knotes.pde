@@ -20,7 +20,7 @@ PVector knot_cinquefoil(float t, float k) {
   float y = sin(t) * (2 - cos(2*t/(2*k + 1)));
   float z = -sin(2*t/(2*k + 1));
 
-  return new PVector(x, y, z).mult(100);
+  return new PVector(x, y, z).mult(119);
 }
 
 // b from 0 to PI
@@ -171,6 +171,14 @@ PVector knot_toupie(float t) {
   float z = r * sin(phi);
 
   return new PVector(x, y, z).mult(200);
+}
+
+PVector knot_banner(float t, float k) {
+  float x = cos(t) * (2 - cos(2*t/(2*k + 1)));
+  float y = sin(t) * (2 - cos(2*t/(2*k + 1)));
+  float z = -sin(2*t/(2*k + 1));
+
+  return new PVector(x, y, z).mult(119);
 }
 
 /// 

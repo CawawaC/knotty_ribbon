@@ -1,4 +1,4 @@
-import peasy.*; //<>// //<>// //<>// //<>//
+import peasy.*; //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 import controlP5.*;
 
 /*
@@ -25,7 +25,7 @@ float ribbon_width = 40; // thicc ribbn
 int twistiness = 0;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
 float flutter = 0.5; // perlin showed up to the party again
 //KnotType knot_type = KnotType.values()[int(random(KnotType.values().length))];
-KnotType knot_type = KnotType.GENERIC;
+KnotType knot_type = KnotType.BANNER;
 DRAWING_TYPE DRAWING = DRAWING_TYPE.INSTANT;  
 
 // Boring variables
@@ -48,7 +48,7 @@ float e, f, g;
 enum KnotType {
   TREFOIL, CINQUEFOIL, KNOTTY, TORUS, FIGURE_EIGHT, 
     FIBONACCI, GENERIC, LISSAJOUS, GENERIC_RANDOM, 
-    KNOT_5, TOUPIE
+    KNOT_5, TOUPIE, BANNER
 }
 
 enum DRAWING_TYPE { 
@@ -56,11 +56,13 @@ enum DRAWING_TYPE {
 }
 
 void setup() {
-  size(800, 80, P3D);
+  size(800, 320, P3D);
 
   cam = new PeasyCam(this, width/2, height/2, 0, 1000);
   cam.setMinimumDistance(5);
-  cam.setMaximumDistance(500);
+  //cam.setMaximumDistance(500);
+  //perspective(200, float(width)/float(height), 
+  //  5, 500);
   ribbon_points = new ArrayList<PVector>();
   closed = false;
 
@@ -73,7 +75,7 @@ void setup() {
   e = random(2);
   f = random(2);
   g = random(2);
-  
+
   println(knot_type);
 }
 
@@ -137,6 +139,9 @@ void draw_ribbon() {
   }
 
   rotateX(PI/3);
+  rotateY(TAU * 1.3);
+  rotateZ(TAU * 1.0);
+  
   beginShape(TRIANGLE_STRIP);
   for (int i = 0; i < ribbon_points.size(); i += 2) {
     PVector p1 = ribbon_points.get(i);
@@ -215,6 +220,10 @@ PVector get_knot_p(KnotType kt, float angle) {
 
   case TOUPIE:
     knot_p = knot_toupie(angle);
+    break;
+
+  case BANNER:
+    knot_p = knot_banner(5*angle, 2);
     break;
   } 
 

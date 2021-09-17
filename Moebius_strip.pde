@@ -56,7 +56,10 @@ enum DRAWING_TYPE {
 }
 
 void setup() {
-  size(800, 320, P3D);
+  size(1000, 1000, P3D);
+  surface.setLocation(920, 0);
+  surface.setTitle("Ribbon");
+  surface.setResizable(false);
 
   cam = new PeasyCam(this, width/2, height/2, 0, 1000);
   cam.setMinimumDistance(5);
@@ -77,11 +80,19 @@ void setup() {
   g = random(2);
 
   println(knot_type);
+
+  ui_setup();
 }
 
 void draw() {
   //background(25);
   background_2d();
+
+  cam.beginHUD();
+  hint(DISABLE_DEPTH_TEST);
+  cp5.draw();
+  cam.endHUD();
+
 
   hint(ENABLE_DEPTH_TEST);
   translate(width/2, height/2);
@@ -141,7 +152,7 @@ void draw_ribbon() {
   rotateX(PI/3);
   rotateY(TAU * 1.3);
   rotateZ(TAU * 1.0);
-  
+
   beginShape(TRIANGLE_STRIP);
   for (int i = 0; i < ribbon_points.size(); i += 2) {
     PVector p1 = ribbon_points.get(i);

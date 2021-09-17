@@ -23,7 +23,7 @@ import controlP5.*;
 // Fun variables
 float ribbon_width = 40; // thicc ribbn
 int twistiness = 0;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
-float flutter = 0.5; // perlin showed up to the party again
+float flutter = 0; // perlin showed up to the party again
 //KnotType knot_type = KnotType.values()[int(random(KnotType.values().length))];
 KnotType knot_type = KnotType.BANNER;
 DRAWING_TYPE DRAWING = DRAWING_TYPE.INSTANT;  
@@ -34,6 +34,7 @@ float angle_resolution = 400; // > 0 pls. Affects draw speed.
 ArrayList<PVector> ribbon_points;
 boolean closed = false;
 float N = TAU * angle_resolution;  // Careful, number of vertices is 2*N.
+int startFrame = 0;
 
 // arguments for a generative color gradient/palette
 // algorithm by https://iquilezles.org/www/articles/palettes/palettes.htm
@@ -45,6 +46,9 @@ PVector d = new PVector(random(1), random(1), random(1));
 // Chaos knot randomizers
 float e, f, g;
 
+// Camera rotation
+PVector camrot;
+
 enum KnotType {
   TREFOIL, CINQUEFOIL, KNOTTY, TORUS, FIGURE_EIGHT, 
     FIBONACCI, GENERIC, LISSAJOUS, GENERIC_RANDOM, 
@@ -52,7 +56,7 @@ enum KnotType {
 }
 
 enum DRAWING_TYPE { 
-  PROGRESSIVE, INSTANT
+  PROGRESSIVE, INSTANT//, BAND
 }
 
 void setup() {
@@ -78,6 +82,11 @@ void setup() {
   e = random(2);
   f = random(2);
   g = random(2);
+  
+  camrot = new PVector();
+  camrot.x = random(0, 0.02);
+  camrot.y = random(0, 0.02);
+  camrot.z = random(0, 0.02);
 
   println(knot_type);
 
@@ -109,6 +118,14 @@ void draw() {
   directionalLight(102, 102, 102, 0, 0, -1);
   specular(255, 255, 255);
   shininess(2);
+  
+  //rotateX(PI/3);
+  //rotateY(TAU * 1.3);
+  //rotateZ(TAU * 1.0);
+  
+  rotateX(frameCount * camrot.x);
+  rotateY(frameCount * camrot.y);
+  rotateZ(frameCount * camrot.z);
 
   switch (DRAWING) {
   case PROGRESSIVE:
@@ -128,7 +145,7 @@ void draw_ribbon() {
   }
 
 
-  float angle = frameCount/angle_resolution;
+  float angle = (frameCount-startFrame)/angle_resolution;
 
   if (angle < TAU) {
     float twist = angle * twistiness/2;  // Divided by 2 to allow for moebius twists
@@ -149,9 +166,7 @@ void draw_ribbon() {
     closed = true;
   }
 
-  rotateX(PI/3);
-  rotateY(TAU * 1.3);
-  rotateZ(TAU * 1.0);
+  
 
   beginShape(TRIANGLE_STRIP);
   for (int i = 0; i < ribbon_points.size(); i += 2) {
@@ -268,6 +283,10 @@ color getColor(PVector a, PVector b, PVector c, PVector d, float t) {
 void keyPressed() {
   if (key == 'b' || key == 'B') {
     save("screenshots/"+hour()+minute()+second()+".png");
+  } else if (key == 'h') {
+    cp5.setVisible(!cp5.isVisible());
+  } else if (key == 'p') {
+    reset_progressive();
   }
 }
 

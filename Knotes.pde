@@ -66,10 +66,6 @@ PVector knot_chaos(float t) {
 }
 
 PVector knot_randomized(float t) {
-  println("e: ", e);
-  println("f: ", f);
-  println("g: ", g);
-
   float r = e * sin(f * PI * t);
   float theta = f * cos(t * g);
   float phi = g * PI * sin(e + t);
@@ -158,7 +154,7 @@ PVector fibonacci_knot(float t, float f1, float f2) {
   float y = cos(f2*t + .5);
   float z = 0.5 * cos(f3*t + 0.5) + 0.5*sin(f2*t + 0.5);
 
-  return new PVector(x, z, z).mult(200);
+  return new PVector(x, y, z).mult(200);
 }
 
 PVector knot_toupie(float t) {

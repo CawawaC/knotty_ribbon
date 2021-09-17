@@ -8,7 +8,7 @@ void instant_draw() {
   float r = 200;
   float angle = 0;
 
-  rotateX(PI/3);
+  //rotateX(PI/3);
   beginShape(TRIANGLE_STRIP);
   while (angle < TAU) {
     float twist = angle * twistiness/2;  // Divided by 2 to allow for moebius twists

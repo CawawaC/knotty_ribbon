@@ -1,4 +1,4 @@
-// ui
+// ui //<>// //<>//
 ControlP5 cp5;
 float ui_x = 40;
 float ui_y = 40;
@@ -73,22 +73,29 @@ void ui_setup() {
     .setGroup(group_ui);
   y += 20;
 
-  cp5.addSlider("ui_ribbon_width")
+  cp5.addToggle("toggle_camera")
     .setPosition(0, y)
     .setSize(200, 19)
-    .setRange(10, 200)
-    .setValue(ribbon_width)
-    .setColorCaptionLabel(color(20, 20, 20))
-    .setGroup(group_ui);
+    .setGroup(group_ui)
+    .setValue(rotate_camera);
+  ;
   y += 20;
+
+  //cp5.addSlider("ui_ribbon_width")
+  //  .setPosition(0, y)
+  //  .setSize(200, 19)
+  //  .setValue(int(ribbon_width))
+  //  .setRange(10, 200)
+  //  //.setColorCaptionLabel(color(20, 20, 20))
+  //  .setGroup(group_ui);
+  //y += 20;
+
 
   ColorPicker cp = cp5.addColorPicker("picker")
     .setHeight(40)
     .setPosition(0, y)
     .setColorValue(color(255, 128, 0, 128))
     .setGroup(group_ui);
-
-
 
 
   Textlabel hide_info = cp5.addTextlabel("label")
@@ -141,5 +148,10 @@ void ui_knot_type(int index) {
 }
 
 void ui_ribbon_width(int value) {
+  println("ui_ribbon_width setting: ", ribbon_width, " now: ", value);
   ribbon_width = value;
+}
+
+void toggle_camera(boolean flag) {
+  rotate_camera = flag;
 }

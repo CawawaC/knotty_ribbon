@@ -21,12 +21,13 @@ import controlP5.*;
 
 
 // Fun variables
-float ribbon_width = 40; // thicc ribbn
+float ribbon_width = 80; // thicc ribbn
 int twistiness = 0;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
 float flutter = 0; // perlin showed up to the party again
 //KnotType knot_type = KnotType.values()[int(random(KnotType.values().length))];
 KnotType knot_type = KnotType.BANNER;
-DRAWING_TYPE DRAWING = DRAWING_TYPE.INSTANT;  
+DRAWING_TYPE DRAWING = DRAWING_TYPE.INSTANT;
+static TextureType texture_type = TextureType.Bismuth;
 
 // Boring variables
 PeasyCam cam;
@@ -48,6 +49,7 @@ float e, f, g;
 
 // Camera rotation
 PVector camrot;
+boolean rotate_camera = true;
 
 enum KnotType {
   TREFOIL, CINQUEFOIL, KNOTTY, TORUS, FIGURE_EIGHT, 
@@ -59,11 +61,18 @@ enum DRAWING_TYPE {
   PROGRESSIVE, INSTANT//, BAND
 }
 
+enum TextureType { 
+  Gradient, Bismuth
+}
+
 void setup() {
   size(1000, 1000, P3D);
   surface.setLocation(920, 0);
   surface.setTitle("Ribbon");
   surface.setResizable(false);
+
+  ribbon_width = 80;
+  println(ribbon_width);
 
   cam = new PeasyCam(this, width/2, height/2, 0, 1000);
   cam.setMinimumDistance(5);
@@ -82,7 +91,7 @@ void setup() {
   e = random(2);
   f = random(2);
   g = random(2);
-  
+
   camrot = new PVector();
   camrot.x = random(0, 0.02);
   camrot.y = random(0, 0.02);
@@ -91,6 +100,7 @@ void setup() {
   println(knot_type);
 
   ui_setup();
+  setup_bismuth();
 }
 
 void draw() {
@@ -100,6 +110,9 @@ void draw() {
   cam.beginHUD();
   hint(DISABLE_DEPTH_TEST);
   cp5.draw();
+  if (DRAWING != DRAWING_TYPE.INSTANT)
+    draw_bismuth();
+  image(bismuth_texture, 0, height-bismuth_texture.height);
   cam.endHUD();
 
 
@@ -118,14 +131,16 @@ void draw() {
   directionalLight(102, 102, 102, 0, 0, -1);
   specular(255, 255, 255);
   shininess(2);
-  
+
   //rotateX(PI/3);
   //rotateY(TAU * 1.3);
   //rotateZ(TAU * 1.0);
-  
-  rotateX(frameCount * camrot.x);
-  rotateY(frameCount * camrot.y);
-  rotateZ(frameCount * camrot.z);
+
+  if (rotate_camera) {
+    rotateX(frameCount * camrot.x);
+    rotateY(frameCount * camrot.y);
+    rotateZ(frameCount * camrot.z);
+  }
 
   switch (DRAWING) {
   case PROGRESSIVE:
@@ -166,14 +181,32 @@ void draw_ribbon() {
     closed = true;
   }
 
-  
+
+
 
   beginShape(TRIANGLE_STRIP);
+  switch(texture_type) {
+  case Bismuth:
+    texture(bismuth_texture);
+    noFill();
+    break;
+
+  default:
+    break;
+  }
+  
   for (int i = 0; i < ribbon_points.size(); i += 2) {
     PVector p1 = ribbon_points.get(i);
     PVector p2 = ribbon_points.get(i+1);
 
-    fill(getColor(a, b, c, d, i/N));
+    switch(texture_type) {
+    case Gradient:
+      fill(getColor(a, b, c, d, i/N));
+      break;
+
+    default:
+      break;
+    }
     paintVertex(p1, p2, i/N);
   }
 
@@ -181,8 +214,10 @@ void draw_ribbon() {
 }
 
 void paintVertex(PVector p1, PVector p2, float t) {
-  vertex(p1.x, p1.y + noise(frameCount/118.2, t, 0)*23*flutter, p1.z);
-  vertex(p2.x, p2.y + noise(frameCount/100.0, t*0.01, 1)*20*flutter, p2.z);
+  vertex(p1.x, p1.y + noise(frameCount/118.2, t, 0)*23*flutter, p1.z, 
+    t*bismuth_texture.width, 0);  // UV
+  vertex(p2.x, p2.y + noise(frameCount/100.0, t*0.01, 1)*20*flutter, p2.z, 
+    t*bismuth_texture.width, bismuth_texture.height);  // UV
 }
 
 //// Many possible knot algorithms

@@ -8,8 +8,23 @@ void instant_draw() {
   float r = 200;
   float angle = 0;
 
+  float ribbon_length = 0;
+  PVector prev_p1 = null;
+
+  
+
   //rotateX(PI/3);
   beginShape(TRIANGLE_STRIP);
+  switch(texture_type) {
+  case Bismuth:
+    texture(bismuth_texture);
+    noFill();
+    break;
+
+  default:
+    break;
+  }
+  
   while (angle < TAU) {
     float twist = angle * twistiness/2;  // Divided by 2 to allow for moebius twists
     float mo = check_for_moebius(twistiness);
@@ -37,11 +52,17 @@ void instant_draw() {
     PVector p2 = new PVector(x2, y2, z2);
 
     //fill(lerpColor(ribbon_gradient[0], ribbon_gradient[1], i/N));
-    fill(getColor(a, b, c, d, angle/TAU*2));
+    if (texture_type == TextureType.Gradient) 
+      fill(getColor(a, b, c, d, angle/TAU*2));
+      
     paintVertex(p1, p2, angle/TAU);
-    
+
     angle += 1 / angle_resolution;
+
+    if (prev_p1 != null) ribbon_length += p1.dist(prev_p1);
+    prev_p1 = p1;
   }
+  //println("ribbon length: " + ribbon_length);
 
   endShape(CLOSE);
 }

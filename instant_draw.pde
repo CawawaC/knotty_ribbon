@@ -17,7 +17,7 @@ void instant_draw() {
   beginShape(TRIANGLE_STRIP);
   switch(texture_type) {
   case Bismuth:
-    texture(bismuth_texture);
+    texture(bismuth_texture.pg);
     noFill();
     break;
 

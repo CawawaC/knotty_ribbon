@@ -1,4 +1,4 @@
-import peasy.*; //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>//
+import peasy.*; //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 import controlP5.*;
 
 /*
@@ -10,7 +10,8 @@ import controlP5.*;
  
  Press 'b' for screenshot.
  
- Made for Creative Code Berlin: Weekly Challenge 2021 week 36 (2021-09-06 to 2021-09-12)
+ Made for sableraph's creative coding Weekly Challenge 
+ 2021 week 36 (2021-09-06 to 2021-09-12)
  
  Inspiration: Moebius strip by MC Escher: tinyurl.com/atjzhc68
  Maths source: http://paulbourke.net/geometry/knots/
@@ -25,17 +26,19 @@ float ribbon_width = 80; // thicc ribbn
 int twistiness = 0;  // How much the ribbon twists on itself. 1 for a simple Moebius strip.
 float flutter = 0; // perlin showed up to the party again
 //KnotType knot_type = KnotType.values()[int(random(KnotType.values().length))];
-KnotType knot_type = KnotType.BANNER;
+KnotType knot_type = KnotType.CINQUEFOIL;
 DRAWING_TYPE DRAWING = DRAWING_TYPE.INSTANT;
 static TextureType texture_type = TextureType.Bismuth;
 
 // Boring variables
+boolean enable_depth_sort = true;  // true: allows proper transparency on transparent ribbon texture
 PeasyCam cam;
 float angle_resolution = 400; // > 0 pls. Affects draw speed.
 ArrayList<PVector> ribbon_points;
 boolean closed = false;
 float N = TAU * angle_resolution;  // Careful, number of vertices is 2*N.
 int startFrame = 0;
+BismuthTexture bismuth_texture;
 
 // arguments for a generative color gradient/palette
 // algorithm by https://iquilezles.org/www/articles/palettes/palettes.htm
@@ -100,19 +103,23 @@ void setup() {
   println(knot_type);
 
   ui_setup();
-  setup_bismuth();
+  cp5.setVisible(false);
+  bismuth_texture = new BismuthTexture();
 }
 
 void draw() {
   //background(25);
   background_2d();
+  
+  if(enable_depth_sort) 
+    hint(ENABLE_DEPTH_SORT);
 
   cam.beginHUD();
   hint(DISABLE_DEPTH_TEST);
   cp5.draw();
-  if (DRAWING != DRAWING_TYPE.INSTANT)
-    draw_bismuth();
-  image(bismuth_texture, 0, height-bismuth_texture.height);
+  if (bismuth_texture.draw_style == "progressive")
+    bismuth_texture.draw_bismuth();
+  //image(bismuth_texture.pg, 0, height-bismuth_texture.pg.height);
   cam.endHUD();
 
 
@@ -187,7 +194,7 @@ void draw_ribbon() {
   beginShape(TRIANGLE_STRIP);
   switch(texture_type) {
   case Bismuth:
-    texture(bismuth_texture);
+    texture(bismuth_texture.pg);
     noFill();
     break;
 
@@ -215,9 +222,9 @@ void draw_ribbon() {
 
 void paintVertex(PVector p1, PVector p2, float t) {
   vertex(p1.x, p1.y + noise(frameCount/118.2, t, 0)*23*flutter, p1.z, 
-    t*bismuth_texture.width, 0);  // UV
+    t*bismuth_texture.pg.width, 0);  // UV
   vertex(p2.x, p2.y + noise(frameCount/100.0, t*0.01, 1)*20*flutter, p2.z, 
-    t*bismuth_texture.width, bismuth_texture.height);  // UV
+    t*bismuth_texture.pg.width, bismuth_texture.pg.height);  // UV
 }
 
 //// Many possible knot algorithms
@@ -233,7 +240,7 @@ PVector get_knot_p(KnotType kt, float angle) {
     break;
 
   case CINQUEFOIL:
-    knot_p = knot_cinquefoil(5*angle, 2);
+    knot_p = knot_cinquefoil(7*angle, 3);
     // (t, k) where t ranges from 0 to (2*k+1)*TAU, k int
     // Examples: (5*angle, 2), (7*angle, 3)
     break;

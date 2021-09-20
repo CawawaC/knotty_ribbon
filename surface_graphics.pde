@@ -1,74 +1,65 @@
-class BismuthTexture extends PGraphics {
+class BismuthTexture {
+  PGraphics pg;
+  float speed = 50;
+  String draw_style = "progressive";
+  //String draw_style = "instant";
+
   BismuthTexture() {
+    pg = createGraphics(8000, int(ribbon_width)*2, P3D);
+    pg.beginDraw();
+    pg.background(0, 0);
+    pg.endDraw();
     
+    if (draw_style == "instant") {
+      draw_bismuth();
+    }
   }
-}
 
-float speed = 10;
-PGraphics bismuth_texture;
+  void draw_bismuth() {
+    pg.beginDraw();
+    pg.noStroke();
+    //pg.rect(0, 0, pg.width, pg.height);
 
-void setup_bismuth() {
-  bismuth_texture = createGraphics(7645, int(ribbon_width)*2, P3D);
-  //bismuth_texture.background(0, 0);
+    switch(draw_style) {
+    case "instant":
+      int i = 0;
+      while (i < pg.width) {
+        i += speed;
+        float bigx = (random(i*speed-50, i*speed));
 
-  if (DRAWING == DRAWING_TYPE.INSTANT) {
-    draw_bismuth();
-  }
-}
-
-void randomize_colors() {
-  a = new PVector(random(1), random(1), random(1));
-  b = new PVector(random(1), random(1), random(1));
-  c = new PVector(random(1), random(1), random(1)); // must be integer number of halves to ensure looping
-  d = new PVector(random(1), random(1), random(1));
-}
-
-void draw_bismuth() {
-  PGraphics pg = bismuth_texture;
-  pg.beginDraw();
-  pg.noStroke();
-  //pg.rect(0, 0, pg.width, pg.height);
-
-  switch(DRAWING) {
-  case INSTANT:
-    int i = 0;
-    while (i < bismuth_texture.width) {
-      i += speed;
-      float bigx = (random(i*speed-50, i*speed));
-
-      if (bigx < bismuth_texture.width) {
-        pg.beginDraw();
-        draw_bismuth_cluster(pg, bigx);
+        if (bigx < pg.width) {
+          draw_bismuth_cluster(bigx);
+        }
       }
+
+      break;
+
+    case "progressive":
+      float bigx = (random(frameCount*speed-50, frameCount*speed));
+
+      if (bigx < pg.width) {
+        draw_bismuth_cluster(bigx);
+      }
+      break;
     }
 
-    break;
-
-  case PROGRESSIVE:
-    float bigx = (random(frameCount*speed-50, frameCount*speed));
-
-    if (bigx < bismuth_texture.width) {
-      draw_bismuth_cluster(pg, bigx);
-    }
-    break;
+    pg.endDraw();
   }
 
-  pg.endDraw();
-}
+  void draw_bismuth_cluster(float bigx) {
+    float x = bigx % pg.width;
+    float y = random(-pg.height/2, pg.height/2);
+    float w = random(pg.height/2, pg.height);
+    float h = random(pg.height/2, pg.height);
 
-void draw_bismuth_cluster(PGraphics pg, float bigx) {
-  float x = bigx % bismuth_texture.width;
-  float y = random(-bismuth_texture.height/2, bismuth_texture.height/2);
-  float w = random(pg.height/2, pg.height);
-  float h = random(pg.height/2, pg.height);
-
-  int thick = 5;
-  while (w > 0 && h > 0) {
-    pg.fill(getColor(a, b, c, d, random(0, TAU)));
-    pg.rect(x, y, w, h);
-    x += thick;
-    y += thick;
-    w -= thick*2;
-    h -= thick*2;
+    int thick = 5;
+    while (w > 0 && h > 0) {
+      pg.fill(getColor(a, b, c, d, random(0, TAU)));
+      pg.rect(x, y, w, h);
+      x += thick;
+      y += thick;
+      w -= thick*2;
+      h -= thick*2;
+    }
   }
 }

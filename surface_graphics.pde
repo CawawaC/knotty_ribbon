@@ -8,7 +8,12 @@ float speed = 10;
 PGraphics bismuth_texture;
 
 void setup_bismuth() {
-  
+  bismuth_texture = createGraphics(7645, int(ribbon_width)*2, P3D);
+  //bismuth_texture.background(0, 0);
+
+  if (DRAWING == DRAWING_TYPE.INSTANT) {
+    draw_bismuth();
+  }
 }
 
 void randomize_colors() {

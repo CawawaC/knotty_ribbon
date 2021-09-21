@@ -166,7 +166,7 @@ PVector knot_toupie(float t) {
   float y = r * cos(phi) * sin(theta);
   float z = r * sin(phi);
 
-  return new PVector(x, y, z).mult(200);
+  return new PVector(x, y, z).mult(100);
 }
 
 PVector knot_banner(float t, float k) {

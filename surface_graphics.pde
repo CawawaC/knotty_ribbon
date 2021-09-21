@@ -1,15 +1,16 @@
 class BismuthTexture {
   PGraphics pg;
-  float speed = 50;
-  String draw_style = "progressive";
-  //String draw_style = "instant";
+  float speed = 5;
+  //String draw_style = "progressive";
+  String draw_style = "instant";
+  int length = 8000;
 
   BismuthTexture() {
-    pg = createGraphics(8000, int(ribbon_width)*2, P3D);
+    pg = createGraphics(length, int(ribbon_width)*2, P3D);
     pg.beginDraw();
     pg.background(0, 0);
     pg.endDraw();
-    
+
     if (draw_style == "instant") {
       draw_bismuth();
     }
@@ -60,6 +61,17 @@ class BismuthTexture {
       y += thick;
       w -= thick*2;
       h -= thick*2;
+    }
+  }
+
+  void redraw() {
+    pg = createGraphics(length, int(ribbon_width)*2, P3D);
+    pg.beginDraw();
+    pg.background(0, 0);
+    pg.endDraw();
+
+    if (draw_style == "instant") {
+      draw_bismuth();
     }
   }
 }

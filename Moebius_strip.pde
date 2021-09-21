@@ -1,4 +1,4 @@
-import peasy.*; //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>//
+import peasy.*; //<>//
 import controlP5.*;
 
 /*
@@ -39,6 +39,8 @@ boolean closed = false;
 float N = TAU * angle_resolution;  // Careful, number of vertices is 2*N.
 int startFrame = 0;
 BismuthTexture bismuth_texture;
+color bg_color_1 = color(50);
+color bg_color_2 = color(0);
 
 // arguments for a generative color gradient/palette
 // algorithm by https://iquilezles.org/www/articles/palettes/palettes.htm
@@ -85,11 +87,11 @@ void setup() {
   ribbon_points = new ArrayList<PVector>();
   closed = false;
 
-  println("Colors:");
-  println("a:", a);
-  println("b:", b);
-  println("c:", c);
-  println("d:", d);
+  //println("Colors:");
+  //println("a:", a);
+  //println("b:", b);
+  //println("c:", c);
+  //println("d:", d);
 
   e = random(2);
   f = random(2);
@@ -110,17 +112,16 @@ void setup() {
 void draw() {
   //background(25);
   background_2d();
-  
-  if(enable_depth_sort) 
-    hint(ENABLE_DEPTH_SORT);
 
-  cam.beginHUD();
-  hint(DISABLE_DEPTH_TEST);
-  cp5.draw();
+
   if (bismuth_texture.draw_style == "progressive")
     bismuth_texture.draw_bismuth();
   //image(bismuth_texture.pg, 0, height-bismuth_texture.pg.height);
-  cam.endHUD();
+
+
+
+  if (enable_depth_sort) 
+    hint(ENABLE_DEPTH_SORT);
 
 
   hint(ENABLE_DEPTH_TEST);
@@ -158,6 +159,16 @@ void draw() {
     instant_draw();  // good for tweaking in search of values
     break;
   }
+
+
+  //
+  //    UI
+  //
+
+  cam.beginHUD();
+  hint(DISABLE_DEPTH_TEST);
+  cp5.draw();
+  cam.endHUD();
 }
 
 void draw_ribbon() {
@@ -201,7 +212,7 @@ void draw_ribbon() {
   default:
     break;
   }
-  
+
   for (int i = 0; i < ribbon_points.size(); i += 2) {
     PVector p1 = ribbon_points.get(i);
     PVector p2 = ribbon_points.get(i+1);
@@ -352,12 +363,12 @@ void background_2d() {
   beginShape();
 
   //fill(getColor(a, b, c, d, 0.0));
-  fill(25);
+  fill(bg_color_1);
   vertex(0, 0);
   vertex(width, 0);
 
   //fill(getColor(a, b, c, d, 0.5));
-  fill(75);
+  fill(bg_color_2);
   vertex(width, height);
   vertex(0, height);
   endShape();

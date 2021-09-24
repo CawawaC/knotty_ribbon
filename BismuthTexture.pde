@@ -1,4 +1,4 @@
-class BismuthTexture { //<>// //<>//
+class BismuthTexture { //<>//
   PGraphics pg;
   int ribbonLength;
   int ribbonWidth;
@@ -67,9 +67,16 @@ class BismuthTexture { //<>// //<>//
     pg.endDraw();
     draw_bismuth();
   }
+  
+  void draw() { }
 }
 
-class ClusteredBismuth extends BismuthTexture {
+class ClusteredBismuth {
+  PGraphics pg;
+  int ribbonLength;
+  int ribbonWidth;
+  InigoPalette palette;
+  float speed = 20;
   ArrayList<Cluster> clusters;
 
   ClusteredBismuth(int l, int rw, InigoPalette p, int s) {

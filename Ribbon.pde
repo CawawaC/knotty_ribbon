@@ -10,14 +10,9 @@ class Ribbon {
 
   Ribbon(int w) {
     ribbonWidth = w;
-    path = new Cinquefoil(4);
-    int N = ceil(TAU * angle_resolution);
-    path.generate_points(N); 
-
-    build_points();
+    setPath(new Cinquefoil(4));
     palette = new InigoPalette();  
 
-    ribbonLength = (int)path.getLength();
     println("length:", ribbonLength);
     println("points N:", points.length);
   }
@@ -28,7 +23,6 @@ class Ribbon {
     for (int i = 0; i < N; i++) {
       PVector p = path.points[i];
       points[i] = new RibbonVertexPair(p, ribbonWidth);
-      println(ribbonWidth);
     }
   }
 
@@ -48,6 +42,14 @@ class Ribbon {
   void paintVertex(PVector p1, PVector p2) {
     vertex(p1.x, p1.y, p1.z);
     vertex(p2.x, p2.y, p2.z);
+  }
+  
+  void setPath(Path p) {
+    int N = ceil(TAU * angle_resolution);
+    path = p;
+    path.generate_points(N); 
+    build_points();
+    ribbonLength = (int)path.getLength();
   }
 }
 

@@ -10,12 +10,14 @@ void setup() {
   surface.setTitle("Ribbon");
   surface.setResizable(false);
 
-  ribbon = new ProgressiveRibbon(80, 30000);
+  //ribbon = new ProgressiveRibbon(80, 30000);
+  //Path path = new Circle();
+  //ribbon.setPath(path);
 
-  //ribbon = new TexturedRibbon(80);
-  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 100);
+  ribbon = new TexturedRibbon(80);
+  cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 100);
   //cb = new AnimatedBismuth(ribbon.ribbonLength, 120, ribbon.palette, 100);
-  //((TexturedRibbon)ribbon).setTexture(cb);
+  ((TexturedRibbon)ribbon).setTexture(cb);
 
 
   camrot = new PVector(random(0, 0.02), random(0, 0.02), random(0, 0.02));
@@ -34,13 +36,13 @@ void draw() {
   specular(255, 255, 255);
   shininess(2);
 
-  rotateX(frameCount * camrot.x);
-  rotateY(frameCount * camrot.y);
-  rotateZ(frameCount * camrot.z);
+  //rotateX(frameCount * camrot.x);
+  //rotateY(frameCount * camrot.y);
+  //rotateZ(frameCount * camrot.z);
 
-  //rotateX(0.1 * TAU);
-  //rotateY(0.08 * TAU);
-  //rotateZ(0.2 * TAU);
+  rotateX(0.1 * TAU);
+  rotateY(0.08 * TAU);
+  rotateZ(0.2 * TAU);
   
   hint(ENABLE_DEPTH_SORT);
 

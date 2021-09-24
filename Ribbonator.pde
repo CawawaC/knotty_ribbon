@@ -1,4 +1,4 @@
-Ribbon ribbon; //<>//
+Ribbon ribbon; //<>// //<>//
 Background bg;
 PVector camrot;
 
@@ -10,14 +10,16 @@ void setup() {
   surface.setTitle("Ribbon");
   surface.setResizable(false);
 
+  ribbon = new Ribbon(90);
+
   //ribbon = new ProgressiveRibbon(80, 30000);
   //Path path = new Circle();
   //ribbon.setPath(path);
 
-  ribbon = new TexturedRibbon(80);
-  cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 100);
-  //cb = new AnimatedBismuth(ribbon.ribbonLength, 120, ribbon.palette, 100);
-  ((TexturedRibbon)ribbon).setTexture(cb);
+  //ribbon = new TexturedRibbon(80);
+  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 100);
+  ////cb = new AnimatedBismuth(ribbon.ribbonLength, 120, ribbon.palette, 100);
+  //((TexturedRibbon)ribbon).setTexture(cb);
 
 
   camrot = new PVector(random(0, 0.02), random(0, 0.02), random(0, 0.02));
@@ -25,6 +27,7 @@ void setup() {
 }
 
 void draw() {
+  println("draw loop begun");
   background(51);
   bg.draw();
 
@@ -43,11 +46,14 @@ void draw() {
   rotateX(0.1 * TAU);
   rotateY(0.08 * TAU);
   rotateZ(0.2 * TAU);
-  
+
   hint(ENABLE_DEPTH_SORT);
 
   if (cb != null) cb.draw();
+  
+  println("begin drawing ribbon");
   ribbon.draw();
+  println("draw loop finished");
 }
 
 void keyPressed() {

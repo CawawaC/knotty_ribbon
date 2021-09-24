@@ -1,54 +1,70 @@
 class Ribbon {
   int ribbonWidth = 80;
   int ribbonLength;
-  RibbonVertexPair[] points;
+  TwoPoints[] points;
   float angle_resolution = 200;
 
   Path path;
+  RibbonBuilder builder;
 
   InigoPalette palette;
 
   Ribbon(int w) {
     ribbonWidth = w;
-    setPath(new Cinquefoil(4));
+    path = new Circle();
+    int N = ceil(TAU * angle_resolution);
+    path.generate_points(N); 
+    builder = new ParallelTransportFrame(path, ribbonWidth);
+    setPath(path);
+    palette = new InigoPalette();  
+
+    println("length:", ribbonLength);
+    println("points N:", points.length);
+  }
+  
+  Ribbon(int w, Path path) {
+    ribbonWidth = w;
+    setPath(path);
     palette = new InigoPalette();  
 
     println("length:", ribbonLength);
     println("points N:", points.length);
   }
 
-  void build_points() {
-    int N = path.points_n;
-    points = new RibbonVertexPair[N];
-    for (int i = 0; i < N; i++) {
-      PVector p = path.points[i];
-      points[i] = new RibbonVertexPair(p, ribbonWidth);
-    }
-  }
+  //void build_points() {
+  //  int N = path.points_n;
+  //  points = new RibbonVertexPair[N];
+  //  for (int i = 0; i < N; i++) {
+  //    PVector p = path.points[i];
+  //    points[i] = new RibbonVertexPair(p, ribbonWidth);
+  //  }
+  //}
 
   void draw() {
+    println("shape begin");
     beginShape(TRIANGLE_STRIP);
-    for (int i = 0; i < points.length; i++) {
+    for (int i = 0; i < points.length-1; i++) {
       noStroke();
       color c = palette.getColor((float)i/points.length);
       fill(c);
-
-      RibbonVertexPair vp = points[i];
+      
+      TwoPoints vp = points[i];
       paintVertex(vp.l, vp.r);
     }
     endShape(CLOSE);
+    println("shape ended");
   }
 
   void paintVertex(PVector p1, PVector p2) {
     vertex(p1.x, p1.y, p1.z);
     vertex(p2.x, p2.y, p2.z);
   }
-  
+
   void setPath(Path p) {
     int N = ceil(TAU * angle_resolution);
     path = p;
     path.generate_points(N); 
-    build_points();
+    points = builder.build_points();
     ribbonLength = (int)path.getLength();
   }
 }
@@ -76,7 +92,7 @@ class ProgressiveRibbon extends Ribbon {
       color c = palette.getColor((float)i/points.length);
       fill(c);
 
-      RibbonVertexPair vp = points[i];
+      TwoPoints vp = points[i];
       paintVertex(vp.l, vp.r);
     }
     endShape(CLOSE);
@@ -107,7 +123,7 @@ class TexturedRibbon extends Ribbon {
       color c = palette.getColor((float)i/points.length);
       //fill(c);
 
-      RibbonVertexPair vp = points[i];
+      TwoPoints vp = points[i];
       paintVertex(vp.l, vp.r, (float)i/points.length);
     }
     endShape(CLOSE);

@@ -167,6 +167,7 @@ void draw() {
 
   cam.beginHUD();
   hint(DISABLE_DEPTH_TEST);
+  hint(DISABLE_DEPTH_SORT);
   cp5.draw();
   cam.endHUD();
 }

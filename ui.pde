@@ -1,4 +1,4 @@
-// ui //<>// //<>// //<>//
+// ui //<>// //<>//
 ControlP5 cp5;
 float ui_x = 40;
 float ui_y = 40;
@@ -12,13 +12,13 @@ void ui_setup() {
     .setPosition(100, 100)
     .setBackgroundHeight(500)
     .setWidth(400)
-    .setBackgroundColor(color(255, 50));
+    .setBackgroundColor(color(150, 50));
 
   Group ui_bg = cp5.addGroup("ui_bg")
     .setPosition(500, 100)
     .setBackgroundHeight(500)
     .setWidth(400)
-    .setBackgroundColor(color(255, 50));
+    .setBackgroundColor(color(150, 50));
 
   int y = 0;
 
@@ -39,7 +39,7 @@ void ui_setup() {
     t.getCaptionLabel().getStyle().moveMargin(-7, 0, 0, -3);
     t.getCaptionLabel().getStyle().movePadding(7, 0, 0, 3);
     t.getCaptionLabel().getStyle().backgroundWidth = 80;
-    t.getCaptionLabel().getStyle().backgroundHeight = 13;
+    t.getCaptionLabel().getStyle().backgroundHeight = 13;      
   }
 
   RadioButton r2 = cp5.addRadioButton("ui_knot_type")
@@ -60,17 +60,19 @@ void ui_setup() {
     .setPosition(0, y)
     .setSize(20, 19)
     .setItemsPerRow(4)
-    .setSpacingColumn(80)
+    .setSpacingColumn(130)
     .setGroup(group_ui);
 
   i = 0;
   for (TextureType tt : TextureType.values()) {
     r3.addItem(tt.toString(), i);
+    if (tt == texture_type)
+      r3.activate(tt.toString());
     i+=1;
   }
 
   y += 50;
-  
+
   cp5.addButton("ui_redraw_texture")
     .setPosition(0, y)
     .setSize(200, 19)
@@ -87,14 +89,12 @@ void ui_setup() {
 
 
   cp5.addButton("randomizeColors")
-    .setValue(100)
     .setPosition(0, y)
     .setSize(200, 19)
     .setGroup(group_ui);
   y += 20;
 
   cp5.addButton("reset_progressive")
-    .setValue(100)
     .setPosition(0, y)
     .setSize(200, 19)
     .setGroup(group_ui);
@@ -115,6 +115,7 @@ void ui_setup() {
     .setGroup(group_ui)
     .setLabel("test")
     .setCaptionLabel("caption")
+    .setValueLabel("value")
     .setMode(ControlP5.SWITCH)
     ;
   y += 20;
@@ -168,14 +169,15 @@ void ui_setup() {
   y += 200;
 }
 
-
 // function colorB will receive changes from 
 // controller with name colorB
-void randomizeColors(int theValue) {
+void randomizeColors() {
   a = new PVector(random(1), random(1), random(1));
   b = new PVector(random(1), random(1), random(1));
   c = new PVector(int(random(1, 4))/2.0, int(random(1, 4))/2.0, int(random(1, 4))/2.0); // must be integer number of halves to ensure looping
   d = new PVector(random(1), random(1), random(1));
+
+  ui_redraw_texture();
 }
 
 void ui_draw_type(int a) {

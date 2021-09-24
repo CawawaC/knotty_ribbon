@@ -88,13 +88,13 @@ class ProgressiveRibbon extends Ribbon {
 }
 
 class TexturedRibbon extends Ribbon {
-  BismuthTexture tex;
+  ClusteredBismuth tex;
 
   TexturedRibbon(int w) {
     super(w);
   }
 
-  void setTexture(BismuthTexture t) {
+  void setTexture(ClusteredBismuth t) {
     tex = t;
   }
 

@@ -1,6 +1,6 @@
 class Path {
-  PVector[] points;
-  int points_n;
+  private PVector[] points;
+  private int points_n;
 
   Path() {
   }
@@ -8,12 +8,12 @@ class Path {
   void generate_points(int N) {
     points_n = N+1;
     points = new PVector[points_n];
-    for (int i = 0; i < points_n; i++) {
+    for (int i = 0; i < points_n; i+=1) {
       PVector p = getPoint((float)i/points_n*TAU);
 
       points[i] = p;
     }
-    
+
     points[N] = points[0];
   }
 
@@ -26,7 +26,7 @@ class Path {
     PVector prev = null;
     for (PVector p : points) {
       if (prev != null)
-        l += p.sub(prev).mag();
+        l += p.copy().sub(prev).mag();
       prev = p;
     }
     return l;
@@ -36,6 +36,28 @@ class Path {
 class Strip extends Path {
   PVector getPoint(float angle) {
     return new PVector((angle-PI) * 200, angle*20, 0);
+  }
+}
+
+class Squiggle extends Path {
+  PVector getPoint(float angle) {
+    return new PVector((angle-PI) * 100, sin(angle) * 50, cos(angle*2) * 100);
+  }
+}
+
+class RandomSquiggle extends Path {
+  float ya, yb, za, zb, zc;
+  
+  RandomSquiggle() {
+    ya = random(0.5, 5);
+    yb = random(5, 50);
+    za = random(0.5, 5);
+    zb = random(5, 50);
+    zc = random(10, 50);
+  }
+  
+  PVector getPoint(float angle) {
+    return new PVector((angle-PI) * 100, sin(ya*angle) * yb, cos(za*angle) * zb + zc);
   }
 }
 
@@ -77,5 +99,25 @@ class Cinquefoil extends Knot {
     float z = -sin(2*t/(2*k + 1));
 
     return new PVector(x, z, y).mult(119);
+  }
+}
+
+class CinquefoilXYZ extends Knot {
+  int k;
+
+  CinquefoilXYZ(int k) {
+    this.k = k;
+  }
+
+  // (t, k) where t ranges from 0 to (2*k+1)*TAU, k int
+  // Examples: (5*angle, 2), (7*angle, 3)
+  PVector getPoint(float t) {
+    t *= 2*k+1;
+
+    float x = cos(t) * (2 - cos(2*t/(2*k + 1)));
+    float y = sin(t) * (2 - cos(2*t/(2*k + 1)));
+    float z = -sin(2*t/(2*k + 1));
+
+    return new PVector(x, y, z).mult(119);
   }
 }

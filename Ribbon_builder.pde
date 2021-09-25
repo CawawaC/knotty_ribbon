@@ -11,10 +11,10 @@ class RibbonBuilder {
     int N = path.points_n;
     RibbonVertexPair[] points = new RibbonVertexPair[N];
     for (int i = 0; i < N; i++) {
-      PVector p = path.points[i];
+      PVector p = path.points[i].copy();
       points[i] = new RibbonVertexPair(p, ribbonWidth);
     }
-
+    
     return points;
   }
 }
@@ -23,51 +23,53 @@ class ParallelTransportFrame extends RibbonBuilder {
 
   PVector initialVector = new PVector(1, 0, 0);
 
-  PVector[] points;
-  PMatrix[] frames;
+  private PVector[] path_points;
+  PMatrix3D[] frames;
 
   float twistStep;
-  float twistAmount = 50;
+  float twistAmount = 0;
 
   float x_delta = 5, y_delta = 3;
 
   ParallelTransportFrame(Path p, float rw) {
     super(p, rw);
 
-    points = path.points;
-    int N = points.length;
-    frames = new PMatrix[N];
+    path_points = path.points;
+    
+    int N = path_points.length;
+    frames = new PMatrix3D[N];
     twistStep = twistAmount / (N-1);
+    
+    
   }
 
   TwoPoints[] build_points() {
-    println("building points...");
-    
     PVector up = initialVector;
     float[] floatMatrix = new float[16];
-    TwoPoints[] pps = new TwoPoints[points.length];
-    
-    for (int i = 0; i < points.length-1; i++) {
+    TwoPoints[] pps = new TwoPoints[path_points.length];
+
+    for (int i = 0; i < path_points.length-1; i++) {
       //computing the orthonormal frame
-      frames[i] = computeFrame(points[i], points[i+1], up, points[i]);
+      frames[i] = computeFrame(path_points[i], path_points[i+1], up, path_points[i]);
       floatMatrix = frames[i].get(floatMatrix);
 
       //applying twist
-      PVector aim = new PVector(floatMatrix[0], floatMatrix[1], floatMatrix[2]);
-      PMatrix3D rot = getRotationMatrix(aim, twistStep*i);
-      frames[i].apply(rot);
+      //PVector aim = new PVector(floatMatrix[0], floatMatrix[1], floatMatrix[2]);
+      //PMatrix3D rot = getRotationMatrix(aim, twistStep*i);
+      //frames[i].apply(rot);
 
       // Extracting the twisted cross vector to build the ribbon
       floatMatrix = frames[i].get(floatMatrix);
       PVector cross = new PVector(floatMatrix[8], floatMatrix[9], floatMatrix[10]);
       cross.mult(ribbonWidth);
-      pps[i] = new TwoPoints(points[i], points[i].add(cross));
+      PVector p2 = path_points[i].copy();
+      p2.add(cross);
+      pps[i] = new TwoPoints(path_points[i], p2);
 
       //critical part of parallel transport, the up vector gets updated at every step
       up = new PVector(floatMatrix[4], floatMatrix[5], floatMatrix[6]);
     }
-    
-    println("points built");
+
     return pps;
   }
 

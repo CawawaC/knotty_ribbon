@@ -1,4 +1,4 @@
-class Ribbon {
+class Ribbon { //<>//
   int ribbonWidth = 80;
   int ribbonLength;
   TwoPoints[] points;
@@ -12,16 +12,17 @@ class Ribbon {
   Ribbon(int w) {
     ribbonWidth = w;
     path = new Circle();
-    int N = ceil(TAU * angle_resolution);
-    path.generate_points(N); 
-    builder = new ParallelTransportFrame(path, ribbonWidth);
+    
+    //int N = ceil(TAU * angle_resolution);
+    //path.generate_points(N); 
+    //builder = new RibbonBuilder(path, ribbonWidth);
     setPath(path);
     palette = new InigoPalette();  
-
+  
     println("length:", ribbonLength);
     println("points N:", points.length);
   }
-  
+
   Ribbon(int w, Path path) {
     ribbonWidth = w;
     setPath(path);
@@ -41,18 +42,18 @@ class Ribbon {
   //}
 
   void draw() {
-    println("shape begin");
     beginShape(TRIANGLE_STRIP);
     for (int i = 0; i < points.length-1; i++) {
-      noStroke();
       color c = palette.getColor((float)i/points.length);
+      //stroke(c);
+      noStroke();
       fill(c);
+      
       
       TwoPoints vp = points[i];
       paintVertex(vp.l, vp.r);
     }
-    endShape(CLOSE);
-    println("shape ended");
+    endShape();
   }
 
   void paintVertex(PVector p1, PVector p2) {
@@ -63,9 +64,14 @@ class Ribbon {
   void setPath(Path p) {
     int N = ceil(TAU * angle_resolution);
     path = p;
+    
     path.generate_points(N); 
-    points = builder.build_points();
+
     ribbonLength = (int)path.getLength();
+    builder = new ParallelTransportFrame(path, ribbonWidth);
+    points = builder.build_points();
+    //println("set path: points", points);
+    
   }
 }
 

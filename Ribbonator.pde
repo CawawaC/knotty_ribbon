@@ -1,4 +1,5 @@
-Ribbon ribbon; //<>// //<>//
+ //<>//
+Ribbon ribbon; //<>//
 Background bg;
 PVector camrot;
 
@@ -11,6 +12,9 @@ void setup() {
   surface.setResizable(false);
 
   ribbon = new Ribbon(90);
+  //Path path = new Squiggle();
+  //ribbon.setPath(path);
+
 
   //ribbon = new ProgressiveRibbon(80, 30000);
   //Path path = new Circle();
@@ -27,7 +31,6 @@ void setup() {
 }
 
 void draw() {
-  println("draw loop begun");
   background(51);
   bg.draw();
 
@@ -39,21 +42,19 @@ void draw() {
   specular(255, 255, 255);
   shininess(2);
 
-  //rotateX(frameCount * camrot.x);
-  //rotateY(frameCount * camrot.y);
-  //rotateZ(frameCount * camrot.z);
+  rotateX(frameCount * camrot.x);
+  rotateY(frameCount * camrot.y);
+  rotateZ(frameCount * camrot.z);
 
-  rotateX(0.1 * TAU);
-  rotateY(0.08 * TAU);
-  rotateZ(0.2 * TAU);
+  //rotateX(0.1 * TAU);
+  //rotateY(0.08 * TAU);
+  //rotateZ(0.2 * TAU);
 
-  hint(ENABLE_DEPTH_SORT);
+  //hint(ENABLE_DEPTH_SORT);
 
   if (cb != null) cb.draw();
-  
-  println("begin drawing ribbon");
+
   ribbon.draw();
-  println("draw loop finished");
 }
 
 void keyPressed() {
@@ -67,5 +68,8 @@ void keyPressed() {
       ProgressiveRibbon pr = (ProgressiveRibbon)ribbon;
       pr.reset();
     }
+  } else if (key == 'o') {
+    Path path = new RandomSquiggle();
+    ribbon.setPath(path);
   }
 }

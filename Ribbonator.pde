@@ -1,19 +1,29 @@
- //<>//
+import com.hamoid.*; //<>//
+import peasy.*;
+
+//PeasyCam cam;
 Ribbon ribbon; //<>//
 Background bg;
 PVector camrot;
 
 ClusteredBismuth cb;
 
+VideoExport videoExport;
+
+
 void setup() {
   size(1000, 1000, P3D);
+  //size(800, 80, P3D);
   surface.setLocation(920, 0);
   surface.setTitle("Ribbon");
   surface.setResizable(false);
 
-  ribbon = new Ribbon(90);
-  //Path path = new Squiggle();
-  //ribbon.setPath(path);
+  //cam = new PeasyCam(this, 500);
+
+
+  ribbon = new Ribbon(80);
+  Path path = new RandomKnot();
+  ribbon.setPath(path);
 
 
   //ribbon = new ProgressiveRibbon(80, 30000);
@@ -28,6 +38,9 @@ void setup() {
 
   camrot = new PVector(random(0, 0.02), random(0, 0.02), random(0, 0.02));
   bg = new Background(color(50), color(32));
+
+  //videoExport = new VideoExport(this, "screenshots/"+hour()+minute()+second()+".mp4");
+  //videoExport.startMovie();
 }
 
 void draw() {
@@ -50,11 +63,35 @@ void draw() {
   //rotateY(0.08 * TAU);
   //rotateZ(0.2 * TAU);
 
+  //rotateX(frameCount * camrot.x);
+
+
+
   //hint(ENABLE_DEPTH_SORT);
 
   if (cb != null) cb.draw();
-
   ribbon.draw();
+
+  //
+  //  EXPORT
+  //
+
+  if (videoExport != null) {
+    if (frameCount * camrot.x < TAU) {
+      videoExport.saveFrame();
+    } else {
+      videoExport.endMovie();
+      exit();
+    }
+  }
+
+  //
+  //  DEBUG
+  //
+
+  //RibbonBuilder b = ribbon.builder;
+  //ParallelTransportFrame ptf = (ParallelTransportFrame) b;
+  //ptf.drawDebug();
 }
 
 void keyPressed() {
@@ -65,11 +102,14 @@ void keyPressed() {
    cp5.setVisible(!cp5.isVisible());
    } */  else if (key == 'p') {
     if (ribbon instanceof ProgressiveRibbon) {
-      ProgressiveRibbon pr = (ProgressiveRibbon)ribbon;
+      ProgressiveRibbon pr = (ProgressiveRibbon)ribbon; 
       pr.reset();
     }
   } else if (key == 'o') {
-    Path path = new RandomSquiggle();
+    Path path = new RandomSquiggle(); 
     ribbon.setPath(path);
+  } else if (key == 'r') {
+    ribbon.path.randomize();
+    ribbon.setPath(ribbon.path);
   }
 }

@@ -14,7 +14,7 @@ class RibbonBuilder {
       PVector p = path.points[i].copy();
       points[i] = new RibbonVertexPair(p, ribbonWidth);
     }
-    
+
     return points;
   }
 }
@@ -35,12 +35,10 @@ class ParallelTransportFrame extends RibbonBuilder {
     super(p, rw);
 
     path_points = path.points;
-    
+
     int N = path_points.length;
     frames = new PMatrix3D[N];
     twistStep = twistAmount / (N-1);
-    
-    
   }
 
   TwoPoints[] build_points() {
@@ -61,10 +59,10 @@ class ParallelTransportFrame extends RibbonBuilder {
       // Extracting the twisted cross vector to build the ribbon
       floatMatrix = frames[i].get(floatMatrix);
       PVector cross = new PVector(floatMatrix[8], floatMatrix[9], floatMatrix[10]);
-      cross.mult(ribbonWidth);
-      PVector p2 = path_points[i].copy();
-      p2.add(cross);
-      pps[i] = new TwoPoints(path_points[i], p2);
+      //cross.mult(ribbonWidth);
+      //PVector p2 = path_points[i].copy();
+      //p2.add(cross);
+      pps[i] = new CrossPair(path_points[i], cross, ribbonWidth);
 
       //critical part of parallel transport, the up vector gets updated at every step
       up = new PVector(floatMatrix[4], floatMatrix[5], floatMatrix[6]);
@@ -110,5 +108,31 @@ class ParallelTransportFrame extends RibbonBuilder {
 
     t.transpose();
     return t;
+  }
+
+  void drawDebug() {
+    int N = path_points.length;
+    for (int i  = 0; i < N-1; i++) {
+      PVector p = ribbon.path.points[i];
+      PMatrix3D f = frames[i];
+      float[] floatMatrix = new float[N];
+      floatMatrix = f.get(floatMatrix); 
+      PVector aim = new PVector(floatMatrix[0], floatMatrix[1], floatMatrix[2]); 
+      PVector up = new PVector(floatMatrix[4], floatMatrix[5], floatMatrix[6]); 
+      PVector cross = new PVector(floatMatrix[8], floatMatrix[9], floatMatrix[10]); 
+
+      aim.mult(50);
+      up.mult(50);
+      cross.mult(50);
+
+      stroke(255, 0, 0); 
+      line(p.x, p.y, p.z, p.x+aim.x, p.y+aim.y, p.z+aim.z); 
+
+      stroke(0, 255, 0); 
+      line(p.x, p.y, p.z, p.x+up.x, p.y+up.y, p.z+up.z); 
+
+      stroke(0, 0, 255); 
+      line(p.x, p.y, p.z, p.x+cross.x, p.y+cross.y, p.z+cross.z);
+    }
   }
 }

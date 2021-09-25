@@ -1,8 +1,8 @@
 class Ribbon { //<>//
-  int ribbonWidth = 80;
+  int ribbonWidth = 20;
   int ribbonLength;
   TwoPoints[] points;
-  float angle_resolution = 200;
+  float angle_resolution = 500;
 
   Path path;
   RibbonBuilder builder;

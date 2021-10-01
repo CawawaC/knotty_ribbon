@@ -13,7 +13,6 @@ class RibbonBuilder {
     for (int i = 0; i < N; i++) {
       PVector p = path.points[i].copy();
       points[i] = new RibbonVertexPair(p, ribbonWidth);
-      println("basic builder points", i, points[i]);
     }
 
     return points;

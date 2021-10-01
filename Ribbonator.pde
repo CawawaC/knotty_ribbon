@@ -21,25 +21,23 @@ void setup() {
   //cam = new PeasyCam(this, 500);
 
 
-  ribbon = new Ribbon(200);
+  ribbon = new Ribbon(100);
   Path path = new Circle();
   ribbon.setPath(path);
-  //cb = new AnimatedBismuth(ribbon.ribbonLength, 1000, ribbon.palette, 50);
-  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 5);
-  //ribbon.setTexture(cb);
+  cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 100);
+  //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 100);
+  ribbon.setTexture(cb);
 
 
-  //ribbon = new BandRibbon(80, 300, 0.2);
+  //ribbon = new BandRibbon(80, 300, 0.8);
   //Path path = new Cinquefoil(4);
   //ribbon.setPath(path);
-  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 50);
-  //ribbon.setTexture(cb);
 
-  //ribbon = new Ribbon(80);
-  //Path path = new RandomKnot();
+  //ribbon = new Ribbon(100);
+  //Path path = new Cinquefoil(3);
   //ribbon.setPath(path);
-  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 50);
-  ////cb = new AnimatedBismuth(ribbon.ribbonLength, 120, ribbon.palette, 100);
+  ////cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 50);
+  //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 50);
   //ribbon.setTexture(cb);
 
 
@@ -60,10 +58,8 @@ void draw() {
 
   ambientLight(200, 200, 200);
   directionalLight(102, 102, 102, 0, 0, -1);
-  spotLight(51, 102, 126, 320, 80, 160, -1, 0, 0, PI/2, 2);
-
+  //spotLight(51, 102, 126, 320, 80, 160, -1, 0, 0, PI/2, 2);
   //pointLight()  
-  //spotLight()
 
   lightSpecular(204, 204, 204);
   //lightFalloff();
@@ -81,10 +77,12 @@ void draw() {
 
   //rotateX(frameCount * camrot.x);
 
-  //hint(ENABLE_DEPTH_SORT);
+  hint(ENABLE_DEPTH_SORT);
+  hint(ENABLE_DEPTH_TEST);
 
   if (cb != null) cb.draw();
   ribbon.draw();
+
 
 
   //
@@ -101,11 +99,11 @@ void draw() {
   }
 
   popMatrix();
-
+  
   //
   //  GUI
   //
-  GUIDraw();
+  //GUIDraw();
 
 
   //

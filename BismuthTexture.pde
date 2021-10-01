@@ -12,7 +12,7 @@ class BismuthTexture { //<>//
     ribbonWidth = (int)rw;
     palette = p;
     //length = (int)l;
-    ribbonLength = 16384;
+    ribbonLength = min((int)l, 16384);
 
     pg = createGraphics(ribbonLength, (int)ribbonWidth, P3D);
 
@@ -83,7 +83,7 @@ class ClusteredBismuth {
     ribbonWidth = rw;
     palette = p;
     //length = (int)l;
-    ribbonLength = l;
+    ribbonLength = min((int)l, 16384);
     speed = s;
 
     pg = createGraphics(ribbonLength, (int)ribbonWidth, P3D);
@@ -129,9 +129,9 @@ class AnimatedBismuth extends ClusteredBismuth {
     while (i < pg.width) {
       int bigx = int(random(i*speed-50, i*speed));
 
-      //Cluster c = new SineCluster(bigx, ribbonLength, ribbonWidth, palette);
+      Cluster c = new SineCluster(bigx, ribbonLength, ribbonWidth, palette);
       //Cluster c = new NoiseCluster(bigx, ribbonLength, ribbonWidth, palette);
-      Cluster c = new AnimatedCluster(bigx, ribbonLength, ribbonWidth, palette);
+      //Cluster c = new AnimatedCluster(bigx, ribbonLength, ribbonWidth, palette);
       c.draw();
       clusters.add(c);
 

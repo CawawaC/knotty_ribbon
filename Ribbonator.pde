@@ -1,8 +1,8 @@
-import com.hamoid.*; //<>//
+import com.hamoid.*; //<>// //<>// //<>//
 import peasy.*;
 
 //PeasyCam cam;
-Ribbon ribbon; //<>//
+Ribbon ribbon;
 Background bg;
 PVector camrot;
 
@@ -20,13 +20,13 @@ void setup() {
 
   //cam = new PeasyCam(this, 500);
 
-  
+
   ribbon = new Ribbon(200);
   Path path = new Circle();
   ribbon.setPath(path);
   //cb = new AnimatedBismuth(ribbon.ribbonLength, 1000, ribbon.palette, 50);
-  cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 5);
-  ribbon.setTexture(cb);
+  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 5);
+  //ribbon.setTexture(cb);
 
 
   //ribbon = new BandRibbon(80, 300, 0.2);
@@ -45,6 +45,7 @@ void setup() {
 
   camrot = new PVector(random(0, 0.02), random(0, 0.02), random(0, 0.02));
   bg = new Background(color(50), color(32));
+  GUISetup();
 
   //videoExport = new VideoExport(this, "screenshots/"+hour()+minute()+second()+".mp4");
   //videoExport.startMovie();
@@ -54,11 +55,19 @@ void draw() {
   background(51);
   bg.draw();
 
+  pushMatrix();
   translate(width/2, height/2);
 
   ambientLight(200, 200, 200);
-  lightSpecular(204, 204, 204);
   directionalLight(102, 102, 102, 0, 0, -1);
+  spotLight(51, 102, 126, 320, 80, 160, -1, 0, 0, PI/2, 2);
+
+  //pointLight()  
+  //spotLight()
+
+  lightSpecular(204, 204, 204);
+  //lightFalloff();
+
   specular(255, 255, 255);
   shininess(2);
 
@@ -71,13 +80,12 @@ void draw() {
   rotateZ(0.2 * TAU);
 
   //rotateX(frameCount * camrot.x);
- //<>//
-
 
   //hint(ENABLE_DEPTH_SORT);
 
   if (cb != null) cb.draw();
   ribbon.draw();
+
 
   //
   //  EXPORT
@@ -91,6 +99,14 @@ void draw() {
       exit();
     }
   }
+
+  popMatrix();
+
+  //
+  //  GUI
+  //
+  GUIDraw();
+
 
   //
   //  DEBUG

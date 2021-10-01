@@ -13,6 +13,7 @@ class RibbonBuilder {
     for (int i = 0; i < N; i++) {
       PVector p = path.points[i].copy();
       points[i] = new RibbonVertexPair(p, ribbonWidth);
+      println("basic builder points", i, points[i]);
     }
 
     return points;
@@ -46,9 +47,11 @@ class ParallelTransportFrame extends RibbonBuilder {
     float[] floatMatrix = new float[16];
     TwoPoints[] pps = new TwoPoints[path_points.length];
 
-    for (int i = 0; i < path_points.length-1; i++) {
+    for (int i = 0; i < path_points.length; i++) {
       //computing the orthonormal frame
-      frames[i] = computeFrame(path_points[i], path_points[i+1], up, path_points[i]);
+      int next_i = i+1;
+      if (i>0) next_i = next_i%i;
+      frames[i] = computeFrame(path_points[i], path_points[next_i], up, path_points[i]);
       floatMatrix = frames[i].get(floatMatrix);
 
       //applying twist

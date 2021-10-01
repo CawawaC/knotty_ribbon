@@ -20,20 +20,26 @@ void setup() {
 
   //cam = new PeasyCam(this, 500);
 
-
+  
   ribbon = new Ribbon(80);
-  Path path = new RandomKnot();
+  Path path = new Cinquefoil(3);
   ribbon.setPath(path);
+  cb = new AnimatedBismuth(ribbon.ribbonLength, 120, ribbon.palette, 100);
+  ribbon.setTexture(cb);
 
 
-  //ribbon = new ProgressiveRibbon(80, 30000);
-  //Path path = new Circle();
+  //ribbon = new BandRibbon(80, 300, 0.2);
+  //Path path = new Cinquefoil(4);
   //ribbon.setPath(path);
+  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 50);
+  //ribbon.setTexture(cb);
 
-  //ribbon = new TexturedRibbon(80);
-  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 100);
+  //ribbon = new Ribbon(80);
+  //Path path = new RandomKnot();
+  //ribbon.setPath(path);
+  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 50);
   ////cb = new AnimatedBismuth(ribbon.ribbonLength, 120, ribbon.palette, 100);
-  //((TexturedRibbon)ribbon).setTexture(cb);
+  //ribbon.setTexture(cb);
 
 
   camrot = new PVector(random(0, 0.02), random(0, 0.02), random(0, 0.02));
@@ -55,16 +61,16 @@ void draw() {
   specular(255, 255, 255);
   shininess(2);
 
-  rotateX(frameCount * camrot.x);
-  rotateY(frameCount * camrot.y);
-  rotateZ(frameCount * camrot.z);
+  //rotateX(frameCount * camrot.x);
+  //rotateY(frameCount * camrot.y);
+  //rotateZ(frameCount * camrot.z);
 
-  //rotateX(0.1 * TAU);
-  //rotateY(0.08 * TAU);
-  //rotateZ(0.2 * TAU);
+  rotateX(0.1 * TAU);
+  rotateY(0.08 * TAU);
+  rotateZ(0.2 * TAU);
 
   //rotateX(frameCount * camrot.x);
-
+ //<>//
 
 
   //hint(ENABLE_DEPTH_SORT);

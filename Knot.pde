@@ -6,14 +6,12 @@ class Path {
   }
 
   void generate_points(int N) {
-    points_n = N+1;
-    points = new PVector[points_n];
-    for (int i = 0; i < points_n; i+=1) {
+    points_n = N;
+    points = new PVector[N+1];
+    for (int i = 0; i < N; i+=1) {
       PVector p = getPoint((float)i/points_n*TAU);
-
       points[i] = p;
     }
-
     points[N] = points[0];
   }
 

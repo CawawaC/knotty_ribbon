@@ -21,10 +21,11 @@ void setup() {
   //cam = new PeasyCam(this, 500);
 
   
-  ribbon = new Ribbon(80);
-  Path path = new Cinquefoil(3);
+  ribbon = new Ribbon(200);
+  Path path = new Circle();
   ribbon.setPath(path);
-  cb = new AnimatedBismuth(ribbon.ribbonLength, 120, ribbon.palette, 100);
+  //cb = new AnimatedBismuth(ribbon.ribbonLength, 1000, ribbon.palette, 50);
+  cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 5);
   ribbon.setTexture(cb);
 
 

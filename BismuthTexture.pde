@@ -83,7 +83,7 @@ class ClusteredBismuth {
     ribbonWidth = rw;
     palette = p;
     //length = (int)l;
-    ribbonLength = 16384;
+    ribbonLength = l;
     speed = s;
 
     pg = createGraphics(ribbonLength, (int)ribbonWidth, P3D);

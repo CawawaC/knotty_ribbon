@@ -81,7 +81,7 @@ class Knot extends Path {
 
 class Circle extends Knot {
   PVector getPoint(float angle) {
-    return new PVector(cos(angle) * 200, 0, sin(angle) * 200);
+    return new PVector(cos(angle) * 200, 0, sin(angle) * 200).mult(2);
   }
 }
 

@@ -1,4 +1,4 @@
-class Ribbon { //<>//
+class Ribbon { //<>// //<>//
   int ribbonWidth = 20;
   int ribbonLength;
   TwoPoints[] points;
@@ -84,7 +84,7 @@ class Ribbon { //<>//
     path.generate_points(N); 
 
     ribbonLength = (int)path.getLength();
-    builder = new ParallelTransportFrame(path, ribbonWidth);
+    builder = new RibbonBuilder(path, ribbonWidth);
     points = builder.build_points();
   }
 }

@@ -1,5 +1,4 @@
-/* //<>//
-class BismuthTexture {
+class BismuthTexture { //<>//
   PGraphics pg;
   int ribbonLength;
   int ribbonWidth;
@@ -71,7 +70,6 @@ class BismuthTexture {
   
   void draw() { }
 }
-*/
 
 class ClusteredBismuth {
   PGraphics pg;

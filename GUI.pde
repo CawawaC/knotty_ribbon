@@ -5,6 +5,8 @@ ControlP5 cp5;
 boolean selfControl;
 int ambientLightColor = color(255);
 
+int y = 0;
+
 void GUISetup() {
   cp5 = new ControlP5(this);
   cp5.setAutoDraw(false);
@@ -12,20 +14,15 @@ void GUISetup() {
   Group groupLights = createGroup("Lights");
 
   cp5.addColorPicker("ambientLightColor")
-    .setPosition(60, 100)
+    .setPosition(0, y)
     .setColorValue(ambientLightColor)
     .setGroup(groupLights)
-    ;
-
-  cp5.addToggle("selfControl")
-    .setLabel("S. Control")
-    .setPosition(100, 100)
-    .setSize(50, 20)
     ;
 }
 
 void GUIDraw() {
   hint(DISABLE_DEPTH_TEST);
+  hint(DISABLE_DEPTH_SORT);
   cp5.draw();
   hint(ENABLE_DEPTH_TEST);
 }

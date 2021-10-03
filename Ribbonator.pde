@@ -25,8 +25,8 @@ void setup() {
   ribbon.setPath(path);
   //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
   //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
-  cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2000);
-  ribbon.setTexture(cb);
+  //cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2000);
+  //ribbon.setTexture(cb);
 
   //ribbon = new BandRibbon(80, 300, 0.8);
   //Path path = new Cinquefoil(4);
@@ -56,7 +56,7 @@ void draw() {
   pushMatrix();
   translate(width/2, height/2);
 
-  ambientLight(200, 200, 200);
+  ambientLight(red(ambientLightColor), green(ambientLightColor), blue(ambientLightColor));
   directionalLight(102, 102, 102, 0, 0, -1);
   //spotLight(51, 102, 126, 320, 80, 160, -1, 0, 0, PI/2, 2);
   //pointLight()  

@@ -1,4 +1,4 @@
-class ClusteredBismuth { //<>//
+class ClusteredBismuth { //<>// //<>//
   PGraphics pg;
   int ribbonLength;
   int ribbonWidth;

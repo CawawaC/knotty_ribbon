@@ -16,7 +16,7 @@ class ClusteredBismuth { //<>//
     palette = p;
     ribbonLength = min((int)l, 16384);
 
-    pg = createGraphics(ribbonLength, (int)ribbonWidth, P3D);
+    pg = createGraphics(ribbonLength+200, (int)ribbonWidth, P3D);
     clusters = new ArrayList<Cluster>();
 
     N = int(ribbonLength * density * 0.01);
@@ -45,7 +45,12 @@ class ClusteredBismuth { //<>//
       c.draw(pg);
     }
     pg.endDraw();
+
+    pg.copy(
+      ribbonLength, 0, 200, ribbonWidth, 
+      0, 0, 200, ribbonWidth);
   }
+
 
   void update() {
   }

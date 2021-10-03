@@ -3,6 +3,7 @@ import controlP5.*;
 
 ControlP5 cp5;
 boolean selfControl;
+int ambientLightColor = color(255);
 
 void GUISetup() {
   cp5 = new ControlP5(this);
@@ -12,7 +13,7 @@ void GUISetup() {
 
   cp5.addColorPicker("ambientLightColor")
     .setPosition(60, 100)
-    .setColorValue(color(255, 128, 0, 128))
+    .setColorValue(ambientLightColor)
     .setGroup(groupLights)
     ;
 
@@ -39,5 +40,5 @@ Group createGroup(String s) {
 }
 
 void ambientLightColor(int col) {
-  println("picker\talpha:"+alpha(col)+"\tred:"+red(col)+"\tgreen:"+green(col)+"\tblue:"+blue(col)+"\tcol"+col);
+  ambientLightColor = col;
 }

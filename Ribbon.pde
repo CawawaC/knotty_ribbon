@@ -1,4 +1,4 @@
-class Ribbon { //<>// //<>//
+class Ribbon { //<>// //<>// //<>//
   int ribbonWidth = 20;
   int ribbonLength;
   TwoPoints[] points;
@@ -66,8 +66,8 @@ class Ribbon { //<>// //<>//
   //use this one for texture UV
   void paintVertex(PVector p1, PVector p2, float t) {
     if (tex != null) {
-      vertex(p1.x, p1.y, p1.z, t*tex.pg.width, 0);
-      vertex(p2.x, p2.y, p2.z, t*tex.pg.width, tex.pg.height);
+      vertex(p1.x, p1.y, p1.z, t*tex.ribbonLength, 0);
+      vertex(p2.x, p2.y, p2.z, t*tex.ribbonLength, tex.pg.height);
     } else {
       paintVertex(p1, p2);
     }

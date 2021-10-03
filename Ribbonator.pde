@@ -25,7 +25,7 @@ void setup() {
   ribbon.setPath(path);
   //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
   //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
-  cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 1000);
+  cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2000);
   ribbon.setTexture(cb);
 
   //ribbon = new BandRibbon(80, 300, 0.8);
@@ -67,13 +67,13 @@ void draw() {
   specular(255, 255, 255);
   shininess(2);
 
-  //rotateX(frameCount * camrot.x);
-  //rotateY(frameCount * camrot.y);
-  //rotateZ(frameCount * camrot.z);
+  rotateX(frameCount * camrot.x);
+  rotateY(frameCount * camrot.y);
+  rotateZ(frameCount * camrot.z);
 
-  rotateX(0.1 * TAU);
-  rotateY(0.08 * TAU);
-  rotateZ(0.2 * TAU);
+  //rotateX(0.1 * TAU);
+  //rotateY(0.08 * TAU);
+  //rotateZ(0.2 * TAU);
 
   //rotateX(frameCount * camrot.x);
 
@@ -106,7 +106,7 @@ void draw() {
   //
   //  GUI
   //
-  //GUIDraw();
+  GUIDraw();
 
 
   //

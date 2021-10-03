@@ -1,4 +1,4 @@
-class Ribbon { //<>//
+class Ribbon { //<>// //<>//
   int ribbonWidth = 20;
   int ribbonLength;
   TwoPoints[] points;

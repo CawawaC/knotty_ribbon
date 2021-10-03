@@ -1,5 +1,5 @@
-import com.hamoid.*; //<>// //<>// //<>// //<>// //<>//
-import peasy.*;
+import com.hamoid.*; //<>//
+//import peasy.*;
 
 //PeasyCam cam;
 Ribbon ribbon;
@@ -20,14 +20,13 @@ void setup() {
 
   //cam = new PeasyCam(this, 500);
 
-
   ribbon = new Ribbon(100);
   Path path = new Circle();
   ribbon.setPath(path);
-  //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 100);
-  cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 5);
+  //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
+  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
+  cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 1000);
   ribbon.setTexture(cb);
-
 
   //ribbon = new BandRibbon(80, 300, 0.8);
   //Path path = new Cinquefoil(4);
@@ -40,6 +39,7 @@ void setup() {
   //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 50);
   //ribbon.setTexture(cb);
 
+  if (cb != null) cb.draw();
 
   camrot = new PVector(random(0, 0.02), random(0, 0.02), random(0, 0.02));
   bg = new Background(color(50), color(32));
@@ -80,7 +80,10 @@ void draw() {
   hint(ENABLE_DEPTH_SORT);
   hint(ENABLE_DEPTH_TEST);
 
-  if (cb != null) cb.draw();
+  if (cb != null && cb.animate) {
+    cb.update();
+    cb.draw();
+  }
   ribbon.draw();
 
 
@@ -99,7 +102,7 @@ void draw() {
   }
 
   popMatrix();
-  
+
   //
   //  GUI
   //
@@ -109,6 +112,9 @@ void draw() {
   //
   //  DEBUG
   //
+
+  //image(cb.pg, 0, 0);
+
 
   //RibbonBuilder b = ribbon.builder;
   //ParallelTransportFrame ptf = (ParallelTransportFrame) b;

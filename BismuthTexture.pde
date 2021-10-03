@@ -1,4 +1,4 @@
-class ClusteredBismuth { //<>// //<>//
+class ClusteredBismuth { //<>// //<>// //<>//
   PGraphics pg;
   int ribbonLength;
   int ribbonWidth;
@@ -6,7 +6,8 @@ class ClusteredBismuth { //<>// //<>//
   ArrayList<Cluster> clusters;
   int N; // Number of clusters
   boolean animate = false;
-
+  boolean redrawTexture = false;
+  
   ClusteredBismuth(int l, int rw, InigoPalette p) {
     this(l, rw, p, 10.0);
   }
@@ -33,16 +34,21 @@ class ClusteredBismuth { //<>// //<>//
   }
 
   Cluster generateCluster(int x) {
-    return new Cluster(x, ribbonLength, ribbonWidth, palette, 1, new PVector(0, 0));
+    Cluster c = new Cluster(x, ribbonLength, ribbonWidth, palette, 1, new PVector(0, 0));
+    if (!redrawTexture)
+      c.draw(pg);
+    return c;
   }
 
   void draw() {
     pg.beginDraw();
     pg.noStroke();
-    pg.clear();
-    for (Cluster c : clusters) {
-      c.update();
-      c.draw(pg);
+    if (redrawTexture) {
+      pg.clear();
+      for (Cluster c : clusters) {
+        c.update();
+        c.draw(pg);
+      }
     }
     pg.endDraw();
 
@@ -60,6 +66,7 @@ class AnimatedBismuth extends ClusteredBismuth {
   AnimatedBismuth(int l, int rw, InigoPalette p, int d) {
     super(l, rw, p, d);
     animate = true;
+    redrawTexture = true;
   }
 
   void generateClusters(int N) {
@@ -79,9 +86,9 @@ class MarchingBismuth extends ClusteredBismuth {
   float speed = 10.0;
   float bismuthLength;
   float startTime;
-
-  MarchingBismuth(int l, int rw, InigoPalette p, float s) {
-    super(l, rw, p);
+  
+  MarchingBismuth(int l, int rw, InigoPalette p, float d, float s) {
+    super(l, rw, p, d);
     speed = s;
 
     bismuthLength = 0;

@@ -21,11 +21,11 @@ void setup() {
   //cam = new PeasyCam(this, 500);
 
   ribbon = new Ribbon(100);
-  Path path = new Circle();
+  Path path = new RandomKnot();
   ribbon.setPath(path);
   //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
   //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
-  cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2000);
+  cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2, 2000);
   ribbon.setTexture(cb);
 
   //ribbon = new BandRibbon(80, 300, 0.8);
@@ -52,6 +52,11 @@ void setup() {
 void draw() {
   background(51);
   bg.draw();
+
+  float fov = PI/3.0;
+  float cameraZ = (height/2.0) / tan(fov/2.0);
+  perspective(fov, float(width)/float(height), 
+    cameraZ/10.0, cameraZ*10.0);
 
   pushMatrix();
   translate(width/2, height/2);
@@ -100,8 +105,9 @@ void draw() {
   //    exit();
   //  }
   //}
-  
-  videoExport.saveFrame();
+
+  if (videoExport != null)
+    videoExport.saveFrame();
 
   popMatrix();
 

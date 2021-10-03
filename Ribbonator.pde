@@ -1,4 +1,4 @@
-import com.hamoid.*; //<>//
+import com.hamoid.*; //<>// //<>//
 //import peasy.*;
 
 //PeasyCam cam;
@@ -25,8 +25,8 @@ void setup() {
   ribbon.setPath(path);
   //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
   //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
-  //cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2000);
-  //ribbon.setTexture(cb);
+  cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2000);
+  ribbon.setTexture(cb);
 
   //ribbon = new BandRibbon(80, 300, 0.8);
   //Path path = new Cinquefoil(4);
@@ -45,8 +45,8 @@ void setup() {
   bg = new Background(color(50), color(32));
   GUISetup();
 
-  //videoExport = new VideoExport(this, "screenshots/"+hour()+minute()+second()+".mp4");
-  //videoExport.startMovie();
+  videoExport = new VideoExport(this, "screenshots/"+hour()+minute()+second()+".mp4");
+  videoExport.startMovie();
 }
 
 void draw() {
@@ -92,21 +92,23 @@ void draw() {
   //  EXPORT
   //
 
-  if (videoExport != null) {
-    if (frameCount * camrot.x < TAU) {
-      videoExport.saveFrame();
-    } else {
-      videoExport.endMovie();
-      exit();
-    }
-  }
+  //if (videoExport != null) {
+  //  if (frameCount * camrot.x < TAU) {
+  //    videoExport.saveFrame();
+  //  } else {
+  //    videoExport.endMovie();
+  //    exit();
+  //  }
+  //}
+  
+  videoExport.saveFrame();
 
   popMatrix();
 
   //
   //  GUI
   //
-  GUIDraw();
+  //GUIDraw();
 
 
   //

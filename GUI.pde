@@ -33,12 +33,28 @@ void GUISetup() {
 }
 
 void buildGroupRibbon(Group g) {
+  int w = ribbon.ribbonWidth;
   //cp5.addSlider("setRibbonWidth")
   //  .setRange(1, 200)
-  //  .setValue(float(ribbon.ribbonWidth))
+  //  .setValue(w)
   //  .setPosition(0, 0)
   //  .setLabel("ribbon width")
   //  .setGroup(g);
+
+  cp5.addSlider("setRibbonWidth", 1, 200).setValue(w).setGroup(g).linebreak();
+
+  cp5.addButton("addClusters").setGroup(g);
+  cp5.addButton("clearClusters").setGroup(g).linebreak();
+
+  cp5.addToggle("toggleTexture").setGroup(g).setValue(cb != null);
+
+
+  DropdownList knotsddl = cp5.addDropdownList("setKnot").setGroup(g);
+
+  Knots[] knots = Knots.values();
+  for (int i = 0; i < knots.length; i++) {
+    knotsddl.addItem(knots[i].name(), i);
+  }
 }
 
 void GUIDraw() {
@@ -67,5 +83,29 @@ void getambientLightColorFromPalette() {
 }
 
 void setRibbonWidth(int v) {
-  ribbon.ribbonWidth = v;
+  ribbon.setRibbonWidth(v);
+}
+
+void setKnot(int i) {
+  ribbon.setPath(getKnotFromEnum(Knots.values()[i]));
+}
+
+void addClusters() {
+ if (cb != null) cb.addClusters(); 
+}
+
+void clearClusters() {
+ if (cb != null) cb.clearClusters(); 
+}
+
+void toggleTexture() {
+  if (cb != null) {
+    cb = null;
+    ribbon.setTexture(null);
+  } else {
+    cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
+    ribbon.setTexture(cb);
+
+    cb.draw();
+  }
 }

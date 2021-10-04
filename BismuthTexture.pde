@@ -1,4 +1,4 @@
-class ClusteredBismuth { //<>// //<>// //<>//
+class ClusteredBismuth { //<>// //<>// //<>// //<>//
   PGraphics pg;
   int ribbonLength;
   int ribbonWidth;
@@ -7,7 +7,7 @@ class ClusteredBismuth { //<>// //<>// //<>//
   int N; // Number of clusters
   boolean animate = false;
   boolean redrawTexture = false;
-  
+
   ClusteredBismuth(int l, int rw, InigoPalette p) {
     this(l, rw, p, 10.0);
   }
@@ -15,7 +15,7 @@ class ClusteredBismuth { //<>// //<>// //<>//
   ClusteredBismuth(int l, int rw, InigoPalette p, float density) {
     ribbonWidth = rw;
     palette = p;
-    ribbonLength = min((int)l, 16384);
+    ribbonLength = min((int)l, 16384-200);
 
     pg = createGraphics(ribbonLength+200, (int)ribbonWidth, P3D);
     clusters = new ArrayList<Cluster>();
@@ -24,10 +24,17 @@ class ClusteredBismuth { //<>// //<>// //<>//
     generateClusters(N);
   }
 
+  void addClusters() {
+    generateClusters();
+  }
+
+  void generateClusters() {
+    generateClusters(N);
+  }
+
   void generateClusters(int N) {
     for (int i = 0; i < N; i++) {
       int x = int(float(ribbonLength) / N * i);
-      println("generating cluster at:", x);
       Cluster c = generateCluster(x);
       clusters.add(c);
     }
@@ -38,6 +45,13 @@ class ClusteredBismuth { //<>// //<>// //<>//
     if (!redrawTexture)
       c.draw(pg);
     return c;
+  }
+
+  void clearClusters() {
+    clusters.clear();
+    pg.beginDraw();
+    pg.background(0, 0);
+    pg.endDraw();
   }
 
   void draw() {
@@ -86,7 +100,7 @@ class MarchingBismuth extends ClusteredBismuth {
   float speed = 10.0;
   float bismuthLength;
   float startTime;
-  
+
   MarchingBismuth(int l, int rw, InigoPalette p, float d, float s) {
     super(l, rw, p, d);
     speed = s;
@@ -125,7 +139,7 @@ class MarchingBismuth extends ClusteredBismuth {
   }
 }
 
-/* //<>//
+/*
  class BismuthTexture {
  PGraphics pg;
  int ribbonLength;

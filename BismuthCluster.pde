@@ -21,7 +21,7 @@ class BaseCluster {
     shift = s;
 
     int ref = min(w, h);
-    N = ref / (2*thickness) + 2;
+    N = ref / (2*thickness) + 1;
 
     colors = new color[N];
 
@@ -59,6 +59,7 @@ class Cluster extends BaseCluster {
     graphics.strokeWeight(strokeWeight);
     for (int i = 0; i < N; i++) {
       graphics.fill(colors[i]);
+      graphics.shininess(2);
       //graphics.rect((i+shift.x)*thickness, (i+shift.y)*thickness, w-i*thickness*2, h-i*thickness*2);
       // Attempt at skewed cystals
       graphics.rect(0, 0, w-i*thickness*2+shift.x, h-i*thickness*2+shift.y);

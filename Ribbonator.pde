@@ -21,11 +21,11 @@ void setup() {
   //cam = new PeasyCam(this, 500);
 
   ribbon = new Ribbon(100);
-  Path path = new RandomKnot();
+  Path path = new Circle();
   ribbon.setPath(path);
   //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
-  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
-  cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2, 2000);
+  cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
+  //cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2, 2000);
   ribbon.setTexture(cb);
 
   //ribbon = new BandRibbon(80, 300, 0.8);
@@ -45,8 +45,8 @@ void setup() {
   bg = new Background(color(50), color(32));
   GUISetup();
 
-  videoExport = new VideoExport(this, "screenshots/"+hour()+minute()+second()+".mp4");
-  videoExport.startMovie();
+  //videoExport = new VideoExport(this, "screenshots/"+hour()+minute()+second()+".mp4");
+  //videoExport.startMovie();
 }
 
 void draw() {
@@ -72,13 +72,14 @@ void draw() {
   specular(255, 255, 255);
   shininess(2);
 
-  rotateX(frameCount * camrot.x);
-  rotateY(frameCount * camrot.y);
-  rotateZ(frameCount * camrot.z);
+  //rotateX(frameCount * camrot.x);
+  //rotateY(frameCount * camrot.y);
+  //rotateZ(frameCount * camrot.z);
 
-  //rotateX(0.1 * TAU);
-  //rotateY(0.08 * TAU);
-  //rotateZ(0.2 * TAU);
+  
+  rotateX(0.1 * TAU);
+  rotateY(0.08 * TAU);
+  rotateZ(0.2 * TAU);
 
   //rotateX(frameCount * camrot.x);
 
@@ -114,7 +115,7 @@ void draw() {
   //
   //  GUI
   //
-  //GUIDraw();
+  GUIDraw();
 
 
   //

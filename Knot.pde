@@ -79,6 +79,32 @@ class Knot extends Path {
   }
 }
 
+Knot getKnotFromEnum(Knots k) {
+  switch(k) {
+  case Circle: 
+    return new Circle();
+
+  case  Trefoil: 
+    return new Trefoil();
+
+  case Cinquefoil:
+    return new Cinquefoil(2);
+
+  case Torus:
+    return new Torus(11, 15, 200, 50);
+
+  case RandomKnot:
+    return new RandomKnot();
+
+  default: 
+    return null;
+  }
+}
+
+enum Knots { 
+  Circle, Trefoil, Cinquefoil, Torus, RandomKnot
+};
+
 class Circle extends Knot {
   PVector getPoint(float angle) {
     return new PVector(cos(angle) * 200, 0, sin(angle) * 200).mult(2);

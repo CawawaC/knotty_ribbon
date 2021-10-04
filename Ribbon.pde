@@ -87,6 +87,16 @@ class Ribbon { //<>// //<>// //<>// //<>//
     builder = new RibbonBuilder(path, ribbonWidth);
     points = builder.build_points();
   }
+
+  void setRibbonWidth(float w) {
+    ribbonWidth = (int)w;
+    if (builder != null) {
+      builder.ribbonWidth = ribbonWidth;
+      points = builder.build_points();
+    }
+     
+     println("ribbon width: ", ribbonWidth);
+  }
 }
 
 class ProgressiveRibbon extends Ribbon {
@@ -125,12 +135,12 @@ class ProgressiveRibbon extends Ribbon {
 
 class BandRibbon extends ProgressiveRibbon {
   float bandLengthRatio = 0;
-  
+
   BandRibbon(int w, float s, float l) {
     super(w, s);
     bandLengthRatio = max(0, min(1, l));
   }
-  
+
   void draw() {
     float time = millis()/1000.0;
     float currentLength = (time-startTime) * speed;

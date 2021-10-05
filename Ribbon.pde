@@ -8,6 +8,7 @@ class Ribbon { //<>// //<>// //<>// //<>//
   RibbonBuilder builder;
   InigoPalette palette;
   ClusteredBismuth tex;
+  Flutter flutter;
 
 
   Ribbon(int w) {
@@ -20,8 +21,7 @@ class Ribbon { //<>// //<>// //<>// //<>//
     setPath(path);
     palette = new InigoPalette();  
 
-    println("length:", ribbonLength);
-    println("points N:", points.length);
+    //flutter = new Flutter(points.length);
   }
 
   Ribbon(int w, Path path) {
@@ -45,6 +45,10 @@ class Ribbon { //<>// //<>// //<>// //<>//
   void draw() {
     beginShape(TRIANGLE_STRIP);
     if (tex != null) texture(tex.pg);
+    if (flutter != null) {
+      flutter.update();
+    }
+
     for (int i = 0; i < points.length-1; i++) {
       color c = palette.getColor((float)i/points.length);
       //stroke(c);
@@ -52,7 +56,13 @@ class Ribbon { //<>// //<>// //<>// //<>//
       if (tex == null) fill(c);
 
 
-      TwoPoints vp = points[i];
+      TwoPoints vp = points[i].copy();
+      if (flutter != null) {
+        float shift = flutter.getShift(i);
+        PVector normal = getPTF().getNormal(i);
+        vp.add(normal.mult(shift));
+      }
+
       paintVertex(vp.l, vp.r, (float)i/points.length);
     }
     endShape();
@@ -65,6 +75,8 @@ class Ribbon { //<>// //<>// //<>// //<>//
 
   //use this one for texture UV
   void paintVertex(PVector p1, PVector p2, float t) {
+
+
     if (tex != null) {
       vertex(p1.x, p1.y, p1.z, t*tex.ribbonLength, 0);
       vertex(p2.x, p2.y, p2.z, t*tex.ribbonLength, tex.pg.height);
@@ -84,8 +96,11 @@ class Ribbon { //<>// //<>// //<>// //<>//
     path.generate_points(N); 
 
     ribbonLength = (int)path.getLength();
-    builder = new RibbonBuilder(path, ribbonWidth);
-    points = builder.build_points();
+    resetBuilder();
+  }
+
+  void setFlutter(Flutter f) {
+    flutter = f;
   }
 
   void setRibbonWidth(float w) {
@@ -94,8 +109,25 @@ class Ribbon { //<>// //<>// //<>// //<>//
       builder.ribbonWidth = ribbonWidth;
       points = builder.build_points();
     }
-     
-     println("ribbon width: ", ribbonWidth);
+  }
+
+  void resetBuilder() {
+    //builder = new RibbonBuilder(path, ribbonWidth);
+    builder = new ParallelTransportFrame(path, ribbonWidth);
+    points = builder.build_points();
+  }
+
+  ParallelTransportFrame getPTF() {
+    //return null; 
+    return (ParallelTransportFrame) builder;
+  }
+
+  void setPTFTwistAmount(float v) {
+    getPTF().setTwistAmount(v);
+  }
+
+  void recalculateBuilder() {
+    points = builder.build_points();
   }
 }
 

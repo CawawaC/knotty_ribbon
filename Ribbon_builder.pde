@@ -42,6 +42,7 @@ class ParallelTransportFrame extends RibbonBuilder {
   }
 
   TwoPoints[] build_points() {
+    println("build points", twistStep);
     PVector up = initialVector;
     float[] floatMatrix = new float[16];
     TwoPoints[] pps = new TwoPoints[path_points.length];
@@ -54,9 +55,9 @@ class ParallelTransportFrame extends RibbonBuilder {
       floatMatrix = frames[i].get(floatMatrix);
 
       //applying twist
-      //PVector aim = new PVector(floatMatrix[0], floatMatrix[1], floatMatrix[2]);
-      //PMatrix3D rot = getRotationMatrix(aim, twistStep*i);
-      //frames[i].apply(rot);
+      PVector aim = new PVector(floatMatrix[0], floatMatrix[1], floatMatrix[2]);
+      PMatrix3D rot = getRotationMatrix(aim, twistStep*i);
+      frames[i].apply(rot);
 
       // Extracting the twisted cross vector to build the ribbon
       floatMatrix = frames[i].get(floatMatrix);
@@ -71,6 +72,14 @@ class ParallelTransportFrame extends RibbonBuilder {
     }
 
     return pps;
+  }
+
+  PVector getNormal(int i) {
+    float[] floatMatrix = new float[16];
+    floatMatrix = frames[i].get(floatMatrix);
+    PVector up = new PVector(floatMatrix[4], floatMatrix[5], floatMatrix[6]);
+    
+    return up;
   }
 
   PMatrix3D computeFrame(PVector start, PVector end, PVector up, PVector pos) {
@@ -136,5 +145,11 @@ class ParallelTransportFrame extends RibbonBuilder {
       stroke(0, 0, 255); 
       line(p.x, p.y, p.z, p.x+cross.x, p.y+cross.y, p.z+cross.z);
     }
+  }
+
+  void setTwistAmount(float v) {
+    twistAmount = v;
+    int N = path_points.length;
+    twistStep = twistAmount / (N-1);
   }
 }

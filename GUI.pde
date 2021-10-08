@@ -3,54 +3,80 @@ import controlP5.*;
 
 ControlP5 cp5;
 
-ColorPicker ambientLightColorPicker;
+ColorWheel ambientLightColorPicker;
 
-boolean selfControl;
+boolean selfControl = false;
 int ambientLightColor = color(255);
 
 int y = 0;
+
+// Accordion groups control groups!
 
 void GUISetup() {
   cp5 = new ControlP5(this);
   cp5.setAutoDraw(false);
 
-  Group groupLights = createGroup("Lights", 10, 10);
-  Group groupRibbon = createGroup("Ribbon", 500, 10);
+  //
+  //  TABS
+  //
 
-  ambientLightColorPicker = cp5.addColorPicker("ambientLightColor")
-    .setPosition(0, y)
-    .setColorValue(ambientLightColor)
-    .setGroup(groupLights)
+  cp5.addTab("composition")
+    .setColorBackground(color(0, 160, 100))
+    .setColorLabel(color(255))
+    .setColorActive(color(255, 128, 0))
     ;
+
+  Accordion defaultAccordion = new Accordion(cp5, "ac");
+
+  //Group groupComposition = createGroup("groupComposition", 0, 50).setWidth(200).moveTo("composition");
+  Group groupRibbon = createGroup("groupRibbon", 0, 50);
+  //
+  //  CONTROLS
+  //
+
+
+
+  ambientLightColorPicker = cp5.addColorWheel("ambientLightColor")
+    .setPosition(0, 50)
+    .setColorValue(ambientLightColor)
+    .moveTo("composition")
+    ;
+
+  cp5.begin(groupRibbon, 50, 50);
 
   cp5.addButton("getambientLightColorFromPalette")
     .setLabel("get from palette")
-    .setPosition(300, 0)
-    .setGroup(groupLights)
+    .linebreak()
+    //.setPosition(300, 0)
+    //.setGroup(groupComposition)
     ;
 
-  buildGroupRibbon(groupRibbon);
-}
+  cp5.addToggle("rotate")
+    //.setLabel("Rotate")
+    .linebreak()
+    //.setGroup(groupComposition)
+    ;
 
-void buildGroupRibbon(Group g) {
+
+
   int w = ribbon.ribbonWidth;
-  cp5.addSlider("setRibbonWidth", 1, 200).setValue(w).setGroup(g).linebreak();
+  cp5.addSlider("setRibbonWidth", 1, 200).setValue(w).linebreak();
 
-  cp5.addButton("addClusters").setGroup(g);
-  cp5.addButton("clearClusters").setGroup(g);
-  cp5.addToggle("toggleTexture").setGroup(g).setValue(cb == null).linebreak();
+  cp5.addButton("addClusters");
+  cp5.addButton("clearClusters");
+  cp5.addToggle("toggleTexture").setValue(cb == null).linebreak();
 
 
-  DropdownList knotsddl = cp5.addDropdownList("setKnot").setGroup(g).linebreak();
+  DropdownList knotsddl = cp5.addDropdownList("setKnot").setGroup("groupRibbon").linebreak();
 
   Knots[] knots = Knots.values();
   for (int i = 0; i < knots.length; i++) {
     knotsddl.addItem(knots[i].name(), i);
   }
 
-  //cp5.addSlider("setPTFTwistAmount", 0, 1).setValue(ribbon.getPTF().twistAmount).plugTo(ribbon).setGroup(g);
-  //cp5.addButton("recalculateBuilder").plugTo(ribbon).setGroup(g);
+  cp5.end();
 }
+
 
 void GUIDraw() {
   hint(DISABLE_DEPTH_TEST);
@@ -105,8 +131,7 @@ void toggleTexture() {
   }
 }
 
-void setPTFTwistAmount(float v) {
-  ribbon.getPTF().setTwistAmount(v);
-  ribbon.builder.build_points();
-  ribbon.points = ribbon.builder.build_points();
+void setRotate(boolean v) {
+  println(v);
+  rotate = v;
 }

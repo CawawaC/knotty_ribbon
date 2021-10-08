@@ -5,9 +5,9 @@ import com.hamoid.*; //<>//
 Ribbon ribbon;
 Background bg;
 PVector camrot;
-
+PVector rotation;
+boolean rotate = false;
 ClusteredBismuth cb;
-
 VideoExport videoExport;
 
 
@@ -44,6 +44,7 @@ void setup() {
   if (cb != null) cb.draw();
 
   camrot = new PVector(random(0, 0.02), random(0, 0.02), random(0, 0.02));
+  rotation = new PVector(0.1*TAU, 0.08*TAU, 0.2*TAU);
   bg = new Background(color(50), color(32));
   GUISetup();
 
@@ -74,14 +75,17 @@ void draw() {
   specular(255, 255, 255);
   shininess(2);
 
-  //rotateX(frameCount * camrot.x);
-  //rotateY(frameCount * camrot.y);
-  //rotateZ(frameCount * camrot.z);
+  if (rotate) {
+    rotation.add(camrot);
+  }
 
-  
-  rotateX(0.1 * TAU);
-  rotateY(0.08 * TAU);
-  rotateZ(0.2 * TAU);
+  rotateX(rotation.x);
+  rotateY(rotation.y);
+  rotateZ(rotation.z);
+
+  //rotateX(0.1 * TAU);
+  //rotateY(0.08 * TAU);
+  //rotateZ(0.2 * TAU);
 
   //rotateX(frameCount * camrot.x);
 

@@ -122,10 +122,6 @@ class Ribbon { //<>// //<>// //<>// //<>//
     return (ParallelTransportFrame) builder;
   }
 
-  void setPTFTwistAmount(float v) {
-    getPTF().setTwistAmount(v);
-  }
-
   void recalculateBuilder() {
     points = builder.build_points();
   }

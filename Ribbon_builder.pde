@@ -55,9 +55,10 @@ class ParallelTransportFrame extends RibbonBuilder {
       floatMatrix = frames[i].get(floatMatrix);
 
       //applying twist
-      PVector aim = new PVector(floatMatrix[0], floatMatrix[1], floatMatrix[2]);
-      PMatrix3D rot = getRotationMatrix(aim, twistStep*i);
-      frames[i].apply(rot);
+      // Makes no sense since I'm using the PTF to actually draw the points. THere's nothing to modify or rotate.
+      //PVector aim = new PVector(floatMatrix[0], floatMatrix[1], floatMatrix[2]);
+      //PMatrix3D rot = getRotationMatrix(aim, twistStep*i);
+      //frames[i].apply(rot);
 
       // Extracting the twisted cross vector to build the ribbon
       floatMatrix = frames[i].get(floatMatrix);
@@ -145,11 +146,5 @@ class ParallelTransportFrame extends RibbonBuilder {
       stroke(0, 0, 255); 
       line(p.x, p.y, p.z, p.x+cross.x, p.y+cross.y, p.z+cross.z);
     }
-  }
-
-  void setTwistAmount(float v) {
-    twistAmount = v;
-    int N = path_points.length;
-    twistStep = twistAmount / (N-1);
   }
 }

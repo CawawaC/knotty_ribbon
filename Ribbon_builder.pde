@@ -42,7 +42,6 @@ class ParallelTransportFrame extends RibbonBuilder {
   }
 
   TwoPoints[] build_points() {
-    println("build points", twistStep);
     PVector up = initialVector;
     float[] floatMatrix = new float[16];
     TwoPoints[] pps = new TwoPoints[path_points.length];
@@ -50,7 +49,8 @@ class ParallelTransportFrame extends RibbonBuilder {
     for (int i = 0; i < path_points.length; i++) {
       //computing the orthonormal frame
       int next_i = i+1;
-      if (i>0) next_i = next_i%i;
+      if (i>0) next_i = next_i % path_points.length;
+      //println(i, next_i);
       frames[i] = computeFrame(path_points[i], path_points[next_i], up, path_points[i]);
       floatMatrix = frames[i].get(floatMatrix);
 
@@ -61,11 +61,8 @@ class ParallelTransportFrame extends RibbonBuilder {
       //frames[i].apply(rot);
 
       // Extracting the twisted cross vector to build the ribbon
-      floatMatrix = frames[i].get(floatMatrix);
+      //floatMatrix = frames[i].get(floatMatrix);
       PVector cross = new PVector(floatMatrix[8], floatMatrix[9], floatMatrix[10]);
-      //cross.mult(ribbonWidth);
-      //PVector p2 = path_points[i].copy();
-      //p2.add(cross);
       pps[i] = new CrossPair(path_points[i], cross, ribbonWidth);
 
       //critical part of parallel transport, the up vector gets updated at every step
@@ -82,10 +79,20 @@ class ParallelTransportFrame extends RibbonBuilder {
     
     return up;
   }
+  
+  PVector getCross(int i) {
+    float[] floatMatrix = new float[16];
+    floatMatrix = frames[i].get(floatMatrix);
+    PVector cross = new PVector(floatMatrix[8], floatMatrix[9], floatMatrix[10]);
+    
+    return cross;
+  }
 
   PMatrix3D computeFrame(PVector start, PVector end, PVector up, PVector pos) {
     //compute an orthonormal frame from two points and an up vector
-    PVector aim = end.copy().sub(start).normalize();
+    //PVector aim = end.copy().sub(start).normalize();
+    PVector aim = end.copy();
+    aim.sub(start).normalize();
     PVector cross = aim.copy().cross(up).normalize();
     up = cross.copy().cross(aim).normalize();
 

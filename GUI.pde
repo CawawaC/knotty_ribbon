@@ -51,7 +51,7 @@ void GUISetup() {
     //.setGroup(groupComposition)
     ;
 
-  cp5.addToggle("rotate")
+  cp5.addToggle("rotateRibbon")
     //.setLabel("Rotate")
     .linebreak()
     //.setGroup(groupComposition)
@@ -129,9 +129,4 @@ void toggleTexture() {
 
     cb.draw();
   }
-}
-
-void setRotate(boolean v) {
-  println(v);
-  rotate = v;
 }

@@ -1,18 +1,30 @@
 class Flutter {
-  PVector speed = new PVector(0.1, 0.1);  // x: squiggliness. y: change rate
-  float scale = 200;
+  float noiseR = 5;
+  //float noiseScale = 200;
   float[] shifts;  // Gives a magnitude for the normal vector
+  boolean animate = false;
 
   Flutter(int N) {
+    this(N, false);
+  }
+  
+  Flutter(int N, boolean a) {
     shifts = new float[N];
+    animate = a;
+    init();
+  }
+
+  void init() {
+    update();
   }
 
   void update() {
     float t = (float)millis() / 1000.0;
     for (int i = 0; i < shifts.length; i++) {
-      float x = speed.x * i;
-      float y = speed.y * t;
-      shifts[i] = noise(x, y) * scale;
+      float a = (float)i/shifts.length * TAU;
+      float noisex = map(cos(a), -1, 1, 0, noiseR);
+      float noisey = map(sin(a), -1, 1, 0, noiseR);
+      shifts[i] = map(noise(noisex, noisey, t), 0, 1, 50, 100);
     }
   }
 

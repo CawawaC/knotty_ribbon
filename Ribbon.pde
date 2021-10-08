@@ -45,24 +45,32 @@ class Ribbon { //<>// //<>// //<>// //<>//
   void draw() {
     beginShape(TRIANGLE_STRIP);
     if (tex != null) texture(tex.pg);
-    if (flutter != null) {
+    if (flutter != null && flutter.animate) {
       flutter.update();
     }
 
     for (int i = 0; i < points.length-1; i++) {
       color c = palette.getColor((float)i/points.length);
       //stroke(c);
-      noStroke();
-      if (tex == null) fill(c);
+
 
 
       TwoPoints vp = points[i].copy();
       if (flutter != null) {
         float shift = flutter.getShift(i);
         PVector normal = getPTF().getNormal(i);
-        vp.add(normal.mult(shift));
+        normal.mult(shift);
+
+        vp.add(normal);
       }
 
+
+      // DEBUGGING
+      //getPTF().drawDebug();
+
+
+      noStroke();
+      if (tex == null) fill(c);
       paintVertex(vp.l, vp.r, (float)i/points.length);
     }
     endShape();

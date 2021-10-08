@@ -6,7 +6,7 @@ Ribbon ribbon;
 Background bg;
 PVector camrot;
 PVector rotation;
-boolean rotate = false;
+boolean rotateRibbon = false;
 ClusteredBismuth cb;
 VideoExport videoExport;
 
@@ -21,14 +21,14 @@ void setup() {
   //cam = new PeasyCam(this, 500);
 
   ribbon = new Ribbon(100);
-  Path path = new Circle();
+  Path path = new Cinquefoil(3);
   ribbon.setPath(path);
   //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
   cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
   //cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2, 2000);
   ribbon.setTexture(cb);
-  //Flutter flutter = new Flutter(ribbon.points.length);
-  //ribbon.setFlutter(flutter);
+  Flutter flutter = new Flutter(ribbon.points.length, true);
+  ribbon.setFlutter(flutter);
 
   //ribbon = new BandRibbon(80, 300, 0.8);
   //Path path = new Cinquefoil(4);
@@ -75,7 +75,7 @@ void draw() {
   specular(255, 255, 255);
   shininess(2);
 
-  if (rotate) {
+  if (rotateRibbon) {
     rotation.add(camrot);
   }
 

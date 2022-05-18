@@ -10,6 +10,8 @@ boolean rotateRibbon = false;
 ClusteredBismuth cb;
 VideoExport videoExport;
 
+boolean showPerspective = false;
+
 
 void setup() {
   size(1000, 1000, P3D);
@@ -20,19 +22,21 @@ void setup() {
 
   //cam = new PeasyCam(this, 500);
 
-  ribbon = new Ribbon(100);
-  Path path = new Cinquefoil(3);
-  ribbon.setPath(path);
-  //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
-  cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
-  //cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2, 2000);
-  ribbon.setTexture(cb);
-  Flutter flutter = new Flutter(ribbon.points.length, true);
-  ribbon.setFlutter(flutter);
+  //ribbon = new Ribbon(100);
+  //Path path = new Cinquefoil(3);
+  //ribbon.setPath(path);
+  ////cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
+  //cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2);
+  ////cb = new MarchingBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 2, 2000);
+  //ribbon.setTexture(cb);
+  //Flutter flutter = new Flutter(ribbon.points.length, true);
+  //ribbon.setFlutter(flutter);
 
-  //ribbon = new BandRibbon(80, 300, 0.8);
+  //ribbon = new BandRibbon(80, 2000, 0.2);
   //Path path = new Cinquefoil(4);
   //ribbon.setPath(path);
+  //Flutter flutter = new Flutter(ribbon.points.length, true);
+  //ribbon.setFlutter(flutter);
 
   //ribbon = new Ribbon(100);
   //Path path = new Cinquefoil(3);
@@ -40,6 +44,12 @@ void setup() {
   ////cb = new ClusteredBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 50);
   //cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 50);
   //ribbon.setTexture(cb);
+  
+  ribbon = new Ribbon(100);
+  Path path = new Romantic();
+  ribbon.setPath(path);
+  cb = new AnimatedBismuth(ribbon.ribbonLength, ribbon.ribbonWidth, ribbon.palette, 50);
+  ribbon.setTexture(cb);
 
   if (cb != null) cb.draw();
 
@@ -56,10 +66,14 @@ void draw() {
   background(51);
   bg.draw();
 
-  float fov = PI/3.0;
-  float cameraZ = (height/2.0) / tan(fov/2.0);
-  perspective(fov, float(width)/float(height), 
-    cameraZ/10.0, cameraZ*10.0);
+  if (showPerspective) {
+    float fov = PI/3.0;
+    float cameraZ = (height/2.0) / tan(fov/2.0);
+    perspective(fov, float(width)/float(height), 
+      cameraZ/10.0, cameraZ*10.0);
+  } else {
+    ortho();
+  }
 
   pushMatrix();
   translate(width/2, height/2);

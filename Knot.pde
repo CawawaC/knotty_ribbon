@@ -111,6 +111,15 @@ class Circle extends Knot {
   }
 }
 
+class Romantic extends Knot {
+  PVector getPoint(float t) {
+    float x = sin(t);
+    float y = sin(t) + sin(10*t);
+    float z = sin(5*t);
+    
+    return new PVector(x, y, z).mult(200);
+  }
+}
 
 class Trefoil extends Knot {
   PVector getPoint(float t) {

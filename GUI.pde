@@ -74,6 +74,9 @@ void GUISetup() {
     knotsddl.addItem(knots[i].name(), i);
   }
 
+  cp5.addToggle("showPerspective").setLabel("perspective").linebreak();
+
+
   cp5.end();
 }
 

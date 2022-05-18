@@ -93,7 +93,8 @@ class ParallelTransportFrame extends RibbonBuilder {
     //PVector aim = end.copy().sub(start).normalize();
     PVector aim = end.copy();
     aim.sub(start).normalize();
-    PVector cross = aim.copy().cross(up).normalize();
+    PVector cross = aim.copy();
+    cross = cross.cross(up).normalize();
     up = cross.copy().cross(aim).normalize();
 
     //PVector aim = new PVector(0, 0, 0);
